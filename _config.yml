@@ -3,19 +3,19 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 'Kevin Hsu blog'
-subtitle: HTML-CSS-Javascript-Web-Life
-description: '學習筆記、沒人想看的生活瑣事'
+title: '前端路上'
+subtitle: HTML CSS Javascript Web Life
+description: '學習筆記、沒人想看的生活雜談'
 keywords: HTML,CSS,Javascript,Web
-author: kevin
+author: Kevin
 language: zh-TW
 timezone: ''
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://kevinshu1995.github.io/blog
+url: https://kevinshu1995.github.io/blog/
 root: /blog/
-permalink: :year/:month/:day/:title/
+permalink: :category/:year:month:day/:abbrlink/
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -32,7 +32,7 @@ i18n_dir: :lang
 skip_render:
 
 # Writing
-new_post_name: :title.md # File name of new posts
+new_post_name: :year-:month-:day-:title.md # File name of new posts
 default_layout: post
 titlecase: false # Transform title into titlecase
 external_link:
@@ -64,6 +64,12 @@ index_generator:
 # Category & Tag
 default_category: uncategorized
 category_map:
+  CSS: css
+  HTML: html
+  JavaScript: javascript
+  Vue: vue
+  生活亂談: casualtalk
+  學習經歷: learningexp 
 tag_map:
 
 # Metadata elements
@@ -101,3 +107,21 @@ deploy:
   type: git
   repo: https://github.com/kevinshu1995/blog
   branch: gh-pages
+
+lazyload:
+  enable: true
+  onlypost: false
+  loadingImg: /images/lazyload.jpg
+
+# abbrlink config
+abbrlink:
+  alg: crc32  # 演算法：crc16(default) and crc32 
+  rep: dec    # 進位制：dec(default) and hex
+
+symbols_count_time:
+ # 文章是否顯示字數統計以及閱讀時間
+  symbols: true
+  time: true
+ # 網頁底部是否顯示字數統計以及閱讀時間
+  total_symbols: true
+  total_time: true
