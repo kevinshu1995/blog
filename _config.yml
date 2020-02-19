@@ -4,8 +4,8 @@
 
 # Site
 title: '前端路上'
-subtitle: HTML CSS Javascript Web Life
-description: '學習筆記、沒人想看的生活雜談'
+subtitle: Web & Photograph & Life
+description: '學得越多，懂得越少'
 keywords: HTML,CSS,Javascript,Web
 author: Kevin
 language: zh-TW
@@ -58,7 +58,7 @@ highlight:
 # order_by: Posts order. (Order by date descending by default)
 index_generator:
   path: ''
-  per_page: 10
+  per_page: 5
   order_by: -date
 
 # Category & Tag
@@ -70,6 +70,7 @@ category_map:
   Vue: vue
   生活亂談: casualtalk
   學習經歷: learningexp 
+  JS地下城: JSDungeons
 tag_map:
 
 # Metadata elements
@@ -125,3 +126,10 @@ symbols_count_time:
  # 網頁底部是否顯示字數統計以及閱讀時間
   total_symbols: true
   total_time: true
+
+#hexo-autonofollow 自動加入非友情連結
+nofollow:
+    enable: true
+    exclude:  # 不加上 nofollow 的友情連結可以放在這邊。
+    #- exclude1.com
+    #- exclude2.com
