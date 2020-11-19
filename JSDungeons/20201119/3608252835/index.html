@@ -9,15 +9,18 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="7JX25-KUbaGIe_Tlk0ocmcZDaYagTvVSmwsCJ7XfW2I">
 
 <link rel="stylesheet" href="/blog/css/main.css">
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/blog/lib/pace/pace-theme-flash.min.css">
+  <script src="/blog/lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"kevinshu1995.github.io","root":"/blog/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"kevinshu1995.github.io","root":"/blog/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="tags: blog俄羅斯方塊謎題   | JS 地下城 - 番外篇 001今天在 Line 的社群上面，有位前輩釋出了公司內部的面試題，蠻有趣的就試做了一下，順便參考看看其他前輩都怎麼寫的，收穫良多 R~ 題目如下。 Challenge實作俄羅斯方塊的計分系統背景俄羅斯方塊是一款益智遊戲，最初是由蘇聯俄羅斯軟件工程師 Alexey Pajitnov 設計的。 關於計分制度計分公式是基於  當玩家">
@@ -29,7 +32,7 @@
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2020-11-19T15:47:03.000Z">
 <meta property="article:modified_time" content="2020-11-19T15:50:28.730Z">
-<meta property="article:author" content="Kevin">
+<meta property="article:author" content="Kevin Hsu">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="JS地下城">
 <meta name="twitter:card" content="summary">
@@ -88,6 +91,7 @@
 </noscript>
 
 <link rel="alternate" href="/blog/atom.xml" title="前端路上" type="application/atom+xml">
+<link rel="alternate" href="/blog/rss2.xml" title="前端路上" type="application/rss+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -140,6 +144,11 @@
     <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
 
   </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>網站地圖</a>
+
+  </li>
   </ul>
 </nav>
 
@@ -154,6 +163,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -172,8 +182,8 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.jpg">
-      <meta itemprop="name" content="Kevin">
-      <meta itemprop="description" content="學得越多，懂得越少">
+      <meta itemprop="name" content="Kevin Hsu">
+      <meta itemprop="description" content="Hi，這個部落格記錄了我的學習筆記、生活雜事 | 我是網頁設計師，曾經是個半吊子的平面設計，後來突然發覺寫網頁超好玩，目標成為真正的前端工程師 | 學得越多，懂得越少">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -190,9 +200,8 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              
 
-              <time title="創建時間：2020-11-19 23:47:03 / 修改時間：23:50:28" itemprop="dateCreated datePublished" datetime="2020-11-19T23:47:03+08:00">2020-11-19</time>
+              <time title="創建時間：2020-11-19 23:47:03" itemprop="dateCreated datePublished" datetime="2020-11-19T23:47:03+08:00">2020-11-19</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -375,7 +384,7 @@
 <div>
 <ul class="post-copyright">
   <li class="post-copyright-author">
-    <strong>作者： </strong>Kevin
+    <strong>作者： </strong>Kevin Hsu
   </li>
   <li class="post-copyright-link">
     <strong>文章連結：</strong>
@@ -408,9 +417,10 @@
 
 
       <footer class="post-footer">
+          
           <div class="post-tags">
-              <a href="/blog/tags/JavaScript/" rel="tag"># JavaScript</a>
-              <a href="/blog/tags/JS%E5%9C%B0%E4%B8%8B%E5%9F%8E/" rel="tag"># JS地下城</a>
+              <a href="/blog/tags/JavaScript/" rel="tag"><i class="fa fa-tag"></i> JavaScript</a>
+              <a href="/blog/tags/JS%E5%9C%B0%E4%B8%8B%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> JS地下城</a>
           </div>
 
         
@@ -494,9 +504,9 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="Kevin" src="/blog/images/avatar.jpg">
-  <p class="site-author-name" itemprop="name">Kevin</p>
-  <div class="site-description" itemprop="description">學得越多，懂得越少</div>
+    <img class="site-author-image" itemprop="image" alt="Kevin Hsu" src="/blog/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Kevin Hsu</p>
+  <div class="site-description" itemprop="description">Hi，這個部落格記錄了我的學習筆記、生活雜事 | 我是網頁設計師，曾經是個半吊子的平面設計，後來突然發覺寫網頁超好玩，目標成為真正的前端工程師 | 學得越多，懂得越少</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
@@ -534,6 +544,19 @@
   </div>
 
 
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://kevinshu1995.github.io/" title="https:&#x2F;&#x2F;kevinshu1995.github.io&#x2F;">個人網站</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://kevinshu1995.github.io/hex_jsDungeon/" title="https:&#x2F;&#x2F;kevinshu1995.github.io&#x2F;hex_jsDungeon&#x2F;">JS地下城</a>
+        </li>
+    </ul>
+  </div>
 
       </div>
 
@@ -558,7 +581,7 @@
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Kevin</span>
+  <span class="author" itemprop="copyrightHolder">Kevin Hsu</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
@@ -570,8 +593,6 @@
     </span>
     <span title="所需總閱讀時間">11 分鐘</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="external nofollow noopener noreferrer" target="_blank">NexT.Pisces</a> 強力驅動
-  </div>
 
         
 
@@ -602,6 +623,7 @@
 <script src="/blog/js/next-boot.js"></script>
 
 
+  <script defer src="/blog/lib/three/three.min.js"></script>
 
 
   
