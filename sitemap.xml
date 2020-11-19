@@ -4,57 +4,145 @@
   <url>
     <loc>https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/</loc>
     
-    <lastmod>2020-11-19T15:50:28.730Z</lastmod>
+    <lastmod>2020-11-19</lastmod>
     
   </url>
   
   <url>
     <loc>https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/</loc>
     
-    <lastmod>2020-11-19T15:32:22.854Z</lastmod>
+    <lastmod>2020-11-19</lastmod>
     
   </url>
   
   <url>
     <loc>https://kevinshu1995.github.io/blog/archives/index.html</loc>
     
-    <lastmod>2020-11-19T15:31:33.403Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://kevinshu1995.github.io/blog/tags/index.html</loc>
-    
-    <lastmod>2020-11-19T15:31:33.403Z</lastmod>
+    <lastmod>2020-11-19</lastmod>
     
   </url>
   
   <url>
     <loc>https://kevinshu1995.github.io/blog/categories/index.html</loc>
     
-    <lastmod>2020-11-19T15:31:33.403Z</lastmod>
+    <lastmod>2020-11-19</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/tags/index.html</loc>
+    
+    <lastmod>2020-11-19</lastmod>
     
   </url>
   
   <url>
     <loc>https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/</loc>
     
-    <lastmod>2020-11-19T15:31:33.402Z</lastmod>
+    <lastmod>2020-11-19</lastmod>
     
   </url>
   
   <url>
     <loc>https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/</loc>
     
-    <lastmod>2020-11-19T15:31:33.401Z</lastmod>
+    <lastmod>2020-11-19</lastmod>
     
   </url>
   
   <url>
     <loc>https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/</loc>
     
-    <lastmod>2020-11-19T15:31:33.401Z</lastmod>
+    <lastmod>2020-11-19</lastmod>
     
+  </url>
+  
+
+  <url>
+    <loc>https://kevinshu1995.github.io/blog</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/tags/HTML/</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/tags/CSS/</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/tags/JavaScript/</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/tags/JS%E5%9C%B0%E4%B8%8B%E5%9F%8E/</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/tags/Movie/</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/tags/Life/</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/tags/%E5%85%AD%E8%A7%92/</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/tags/%E5%89%8D%E7%AB%AF%E5%AD%B8%E7%BF%92/</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/categories/JSDungeons/</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/categories/casualtalk/</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/categories/learningexp/</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
   </url>
   
 </urlset>

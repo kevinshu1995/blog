@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"kevinshu1995.github.io","root":"/blog/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="tags: blog俄羅斯方塊謎題   | JS 地下城 - 番外篇 001今天在 Line 的社群上面，有位前輩釋出了公司內部的面試題，蠻有趣的就試做了一下，順便參考看看其他前輩都怎麼寫的，收穫良多 R~ 題目如下。 Challenge實作俄羅斯方塊的計分系統背景俄羅斯方塊是一款益智遊戲，最初是由蘇聯俄羅斯軟件工程師 Alexey Pajitnov 設計的。 關於計分制度計分公式是基於  當玩家">
+<meta property="og:type" content="article">
+<meta property="og:title" content="俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+<meta property="og:url" content="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/index.html">
+<meta property="og:site_name" content="前端路上">
+<meta property="og:description" content="tags: blog俄羅斯方塊謎題   | JS 地下城 - 番外篇 001今天在 Line 的社群上面，有位前輩釋出了公司內部的面試題，蠻有趣的就試做了一下，順便參考看看其他前輩都怎麼寫的，收穫良多 R~ 題目如下。 Challenge實作俄羅斯方塊的計分系統背景俄羅斯方塊是一款益智遊戲，最初是由蘇聯俄羅斯軟件工程師 Alexey Pajitnov 設計的。 關於計分制度計分公式是基於  當玩家">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2020-11-19T15:47:03.000Z">
+<meta property="article:modified_time" content="2020-11-19T15:50:28.730Z">
+<meta property="article:author" content="Kevin">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="JS地下城">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001 | 前端路上</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154890967-2"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154890967-2');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="前端路上" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端路上</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Web & Photograph & Life</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.jpg">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="學得越多，懂得越少">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端路上">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2020-11-19 23:47:03 / 修改時間：23:50:28" itemprop="dateCreated datePublished" datetime="2020-11-19T23:47:03+08:00">2020-11-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/JSDungeons/" itemprop="url" rel="index"><span itemprop="name">JS地下城</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">文章字數：</span>
+              <span>2.3k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">所需閱讀時間 &asymp;</span>
+              <span>2 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h6 id="tags-blog"><a href="#tags-blog" class="headerlink" title="tags: blog"></a>tags: <code>blog</code></h6><h1 id="俄羅斯方塊謎題-JS-地下城-番外篇-001"><a href="#俄羅斯方塊謎題-JS-地下城-番外篇-001" class="headerlink" title="俄羅斯方塊謎題   | JS 地下城 - 番外篇 001"></a>俄羅斯方塊謎題   | JS 地下城 - 番外篇 001</h1><p>今天在 Line 的社群上面，有位前輩釋出了公司內部的面試題，蠻有趣的就試做了一下，順便參考看看其他前輩都怎麼寫的，收穫良多 R~</p>
+<h2 id="題目如下。"><a href="#題目如下。" class="headerlink" title="題目如下。"></a>題目如下。</h2><blockquote>
+<h2 id="Challenge"><a href="#Challenge" class="headerlink" title="Challenge"></a>Challenge</h2><h2 id="實作俄羅斯方塊的計分系統"><a href="#實作俄羅斯方塊的計分系統" class="headerlink" title="實作俄羅斯方塊的計分系統"></a>實作俄羅斯方塊的計分系統</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>俄羅斯方塊是一款益智遊戲，<br>最初是由蘇聯俄羅斯軟件工程師 Alexey Pajitnov 設計的。</p>
+<h3 id="關於計分制度"><a href="#關於計分制度" class="headerlink" title="關於計分制度"></a>關於計分制度</h3><p>計分公式是基於  <code>當玩家一次清除越多條線，所獲得的分數就會越多</code>  的想法下去設計的。<br>例如，<code>消去一行得 40 分</code>，<code>消去四行得 1200 分</code>。</p>
+<p>且還搭配了一個<code>分數會隨等級倍增</code>的規則。<br>遊戲會<code>從等級 0 開始</code>。<br>當<code>玩家每清除 10 行，等級就會上升</code>。<br>值得注意的是，等級上升之後，消除的總行數是不會重置的。</p>
+</blockquote>
+<a id="more"></a>
+
+<blockquote>
+<p>關於這個題目，您可以參考此表：</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>消去 1 行</th>
+<th>消去 2 行</th>
+<th>消去 3 行</th>
+<th>消去 4 行</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>40</td>
+<td>100</td>
+<td>300</td>
+<td>1200</td>
+</tr>
+<tr>
+<td>1</td>
+<td>80</td>
+<td>200</td>
+<td>600</td>
+<td>2400</td>
+</tr>
+<tr>
+<td>2</td>
+<td>120</td>
+<td>300</td>
+<td>900</td>
+<td>3600</td>
+</tr>
+<tr>
+<td>3</td>
+<td>160</td>
+<td>400</td>
+<td>1200</td>
+<td>4800</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>320</td>
+<td>800</td>
+<td>2400</td>
+<td>9600</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><em>你必須透過這張表格得出的公式來以此類推到 level N</em></p>
+<h3 id="任務"><a href="#任務" class="headerlink" title="任務"></a>任務</h3><p>用 Nintendo 的原始計分系統來計算俄羅斯方塊的分數</p>
+<p>type Line = 0 | 1 | 2 | 3 | 4; type getScore = (list: Line[]) =&gt; number;</p>
+<h3 id="Input"><a href="#Input" class="headerlink" title="Input"></a>Input</h3><p>範例：<code>[4, 2, 2, 3, 3, 4, 2]</code><br>隨機長度的 array 且裡面只包含數字  <code>0</code>  到  <code>4</code></p>
+<h3 id="Output"><a href="#Output" class="headerlink" title="Output"></a>Output</h3><p>計算的最終分數。</p>
+<h3 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h3></blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">getScore([4, 2, 2, 3, 3, 4, 2]); &#x2F;&#x2F; returns 4900</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ol>
+<li>消去 4 行 +1200 (當前等級<code>0</code>)。分數：<code>0 + 1200 = 1200</code></li>
+<li>消去 2 行 +100。分數：<code>1200 + 100 = 1300</code></li>
+<li>消去 2 行 +100。分數：<code>1300 + 100 = 1400</code></li>
+<li>消去 3 行 +300（當前等級仍為<code>0</code>）。分數：<code>1400 + 300 = 1700</code><br><em>消除的總行數  <code>11</code>=<code>(4 + 2 + 2 + 3)</code>，因此等級上升到<code>1</code>(每消除<code>10</code>行上升一次)</em></li>
+<li>消去 3 行 +600 (當前等級  <code>1</code>)。分數：<code>1700 + 600 = 2300</code></li>
+<li>消去 4 行 +2400。分數：<code>2300 + 2400 = 4700</code></li>
+<li>消去 2 行 +200。分數：<code>4700 + 200 = 4900</code></li>
+</ol>
+<h3 id="Answer"><a href="#Answer" class="headerlink" title="Answer"></a>Answer</h3></blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function getScore(list) &#123;</span><br><span class="line"></span><br><span class="line">    return score</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<hr>
+<br>
+
+<p>看完題目的時候想說感覺蠻簡單的，實作上感覺有些邏輯有點不熟悉，還是花了點時間想了一下。</p>
+<br>
+## 馬上開始
+
+<ol>
+<li><p>觀察分數如何得到<br>觀察一下行數&amp;等級的表格，第 0 級消除 1~4 行後得到的分數是基礎值，接下來依照級數，每一級的分數會是 ( 消除 x 行的基礎分數 _  (級數+1)_ 2)<br>所以這邊得到幾個小結論</p>
+<ol>
+<li>消除第 0 級的 1~4 行分數 =&gt; [40, 100, 300, 1200]</li>
+<li>計算分數的公式會是   ( 消除 x 行的基礎分數 _  (級數+1)_ 2)</li>
+</ol>
+</li>
+<li><p>再來先假設只有傳入一個數字吧，會比較好思考。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 只消掉一行</span></span><br><span class="line"><span class="keyword">let</span> lines = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getScore</span>(<span class="params">lines</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//消除行數</span></span><br><span class="line">  <span class="keyword">let</span> line = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">//基礎分數</span></span><br><span class="line">  <span class="keyword">let</span> basic = [<span class="number">40</span>, <span class="number">100</span>, <span class="number">300</span>, <span class="number">1200</span>];</span><br><span class="line">  <span class="comment">//級數</span></span><br><span class="line">  <span class="keyword">let</span> level = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// 公式</span></span><br><span class="line">  <span class="keyword">return</span> basic[lines - <span class="number">1</span>] * (level + <span class="number">1</span>) * <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(getScore(lines));</span><br></pre></td></tr></table></figure>
+
+<p>應該不難。</p>
+</li>
+<li><p>傳入多個參數要怎麼進行?<br>從結果來看，因為要計算總合，這邊就直接聯想到 <code>reduce()</code>，還有一些需要特別注意的細節。</p>
+<ol>
+<li>消除分數會隨著等級提升而提高，但是以新數值傳入前的等級計算</li>
+<li>每一輪等級計算是以還沒加上傳入行數的等級為基礎</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getScore</span>(<span class="params">list</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> score_basic = [<span class="number">40</span>, <span class="number">100</span>, <span class="number">300</span>, <span class="number">1200</span>];</span><br><span class="line">  <span class="keyword">let</span> level_times = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">let</span> level = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">let</span> line = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">return</span> list.reduce(<span class="function">(<span class="params">acc, value</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">//以累積的行數(line)計算目前等級</span></span><br><span class="line">    level = <span class="built_in">Math</span>.floor(line / <span class="number">10</span>);</span><br><span class="line">    <span class="comment">//計算等級後，讓累績行數加上新增的消除行數 (為下一圈做準備)</span></span><br><span class="line">    line += value;</span><br><span class="line">    <span class="keyword">return</span> acc + score_basic[value - <span class="number">1</span>] * (level + <span class="number">1</span>);</span><br><span class="line">  &#125;, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line">getScore([<span class="number">4</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">2</span>]); <span class="comment">// 4900</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>小小檢討一下<br>後來看了一下其他前輩的算法之後發現，在計算等級的地方，我想得有點複雜<br><code>level = Math.floor(line/10)</code><br>這一段其實可以改成<br><code>level = (line- line%10)/10</code><br>就不需要用到 Math 了。</p>
+</li>
+</ol>
+<br>
+
+<hr>
+<br>
+
+<h2 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h2><p>後來看到丟出這段題目的前輩的解法，沒看過 Functional Programming，直接被嚇到 XDD，程式碼如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// J3小 XDD</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">getScore</span>(<span class="params">arr: number[]</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> arr.reduce(</span><br><span class="line">    (&#123; scores, totalLines &#125;, lines) =&gt; (&#123;</span><br><span class="line">      scores:</span><br><span class="line">        scores +</span><br><span class="line">        [<span class="number">0</span>, <span class="number">40</span>, <span class="number">100</span>, <span class="number">300</span>, <span class="number">1200</span>][lines] * (<span class="built_in">Math</span>.floor(totalLines / <span class="number">10</span>) + <span class="number">1</span>),</span><br><span class="line">      totalLines: totalLines + lines,</span><br><span class="line">    &#125;),</span><br><span class="line">    &#123; <span class="attr">scores</span>: <span class="number">0</span>, <span class="attr">totalLines</span>: <span class="number">0</span> &#125;</span><br><span class="line">  ).scores;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>慌張的我馬上去查了一下 FP 在幹嘛，學習清單又多一項可以學了 (擦汗..</p>
+<p>PS. 直接跳過傳入資料的驗證 XD</p>
+<br>
+
+<p><em>本文章若有任何資訊誤植或侵權，煩請告知，我會立刻處理。</em></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>Kevin
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/" title="俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>歡迎關注我的其它發布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/JavaScript/" rel="tag"># JavaScript</a>
+              <a href="/blog/tags/JS%E5%9C%B0%E4%B8%8B%E5%9F%8E/" rel="tag"># JS地下城</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/learningexp/20200530/4039908204/" rel="prev" title="線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+      <i class="fa fa-chevron-left"></i> 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#tags-blog"><span class="nav-number">1.</span> <span class="nav-text">tags: blog</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#俄羅斯方塊謎題-JS-地下城-番外篇-001"><span class="nav-number"></span> <span class="nav-text">俄羅斯方塊謎題   | JS 地下城 - 番外篇 001</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#題目如下。"><span class="nav-number"></span> <span class="nav-text">題目如下。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Challenge"><span class="nav-number"></span> <span class="nav-text">Challenge</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#實作俄羅斯方塊的計分系統"><span class="nav-number"></span> <span class="nav-text">實作俄羅斯方塊的計分系統</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number"></span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#關於計分制度"><span class="nav-number"></span> <span class="nav-text">關於計分制度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#任務"><span class="nav-number"></span> <span class="nav-text">任務</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Input"><span class="nav-number"></span> <span class="nav-text">Input</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Output"><span class="nav-number"></span> <span class="nav-text">Output</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example"><span class="nav-number"></span> <span class="nav-text">Example</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Answer"><span class="nav-number"></span> <span class="nav-text">Answer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#後記"><span class="nav-number"></span> <span class="nav-text">後記</span></a></li></ol></li></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Kevin" src="/blog/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Kevin</p>
+  <div class="site-description" itemprop="description">學得越多，懂得越少</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分類</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/kevinshu1995" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;kevinshu1995" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/kevinshu1995@gmail.com" title="E-Mail → kevinshu1995@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/wenshiu.hsu" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;wenshiu.hsu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-facebook fa-fw"></i>FB Page</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/kevinshu" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;kevinshu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="總字數">12k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">11 分鐘</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="external nofollow noopener noreferrer" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/";
+    this.page.identifier = "JSDungeons/20201119/3608252835/";
+    this.page.title = "俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://kevinshu1995.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

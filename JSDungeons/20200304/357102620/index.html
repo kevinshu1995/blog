@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"kevinshu1995.github.io","root":"/blog/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="馬上又來了第二篇的 JS 地下城文章，這次的目標是時鐘。 一看到介面全部使用 CSS 手寫繪製，整個就嚇傻了，感覺很複雜要花很多時間切，本來有點想偷懶直接貼圖上去，後來上網查了一下別人都怎麼做的時候，突然發現好像也不會太難，於是就毅然決然地切了QQ。 搞了半天 CSS 花超多時間，我以為我是在練習 JS 。 XDDD   好啦！不要廢話了，來看看這次的目標吧。     BOSS 弱點  –【特定技">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS、JS切個時鐘吧 | JS地下城 - 002">
+<meta property="og:url" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/index.html">
+<meta property="og:site_name" content="前端路上">
+<meta property="og:description" content="馬上又來了第二篇的 JS 地下城文章，這次的目標是時鐘。 一看到介面全部使用 CSS 手寫繪製，整個就嚇傻了，感覺很複雜要花很多時間切，本來有點想偷懶直接貼圖上去，後來上網查了一下別人都怎麼做的時候，突然發現好像也不會太難，於是就毅然決然地切了QQ。 搞了半天 CSS 花超多時間，我以為我是在練習 JS 。 XDDD   好啦！不要廢話了，來看看這次的目標吧。     BOSS 弱點  –【特定技">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/Iqz3edI.png">
+<meta property="og:image" content="https://i.imgur.com/NzAezBU.png">
+<meta property="og:image" content="https://i.imgur.com/yhDI8EJ.png">
+<meta property="og:image" content="https://i.imgur.com/9gGrg7B.png">
+<meta property="article:published_time" content="2020-03-04T11:56:49.000Z">
+<meta property="article:modified_time" content="2020-11-19T15:31:33.402Z">
+<meta property="article:author" content="Kevin">
+<meta property="article:tag" content="HTML">
+<meta property="article:tag" content="CSS">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="JS地下城">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/Iqz3edI.png">
+
+<link rel="canonical" href="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>CSS、JS切個時鐘吧 | JS地下城 - 002 | 前端路上</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154890967-2"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154890967-2');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="前端路上" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端路上</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Web & Photograph & Life</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.jpg">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="學得越多，懂得越少">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端路上">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CSS、JS切個時鐘吧 | JS地下城 - 002
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2020-03-04 19:56:49" itemprop="dateCreated datePublished" datetime="2020-03-04T19:56:49+08:00">2020-03-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2020-11-19 23:31:33" itemprop="dateModified" datetime="2020-11-19T23:31:33+08:00">2020-11-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/JSDungeons/" itemprop="url" rel="index"><span itemprop="name">JS地下城</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">文章字數：</span>
+              <span>1.7k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">所需閱讀時間 &asymp;</span>
+              <span>2 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>馬上又來了第二篇的 JS 地下城文章，這次的目標是時鐘。</p>
+<p>一看到介面全部使用 <strong>CSS 手寫繪製</strong>，整個就嚇傻了，感覺很複雜要花很多時間切，本來有點想偷懶直接貼圖上去，後來上網查了一下別人都怎麼做的時候，突然發現好像也不會太難，於是就毅然決然地切了QQ。</p>
+<p>搞了半天 CSS 花超多時間，我以為我是在練習 JS 。 XDDD</p>
+<br>
+
+<p>好啦！不要廢話了，來看看這次的目標吧。</p>
+<br>
+
+<blockquote>
+<ul>
+<li><font color="#aaa">BOSS 弱點</font></li>
+</ul>
+<p>–<font color="#aaa">【特定技術】需使用 JS 原生語法的 getDate() 撈取時間，不可用套件</font><br>–<font color="#aaa">【特定技術】需使用 JS 原生語法的 setTimeout() 或 setInterval()，持續讓秒針、分針、時針能夠以台北時區移動</font><br>–<font color="#aaa">【特定技術】介面請全部用 CSS2、CSS3 手寫繪製，什麼…？你說太強人所難？？那..用圖片也不是不行辣， 點選一下元素，右側控制列會有個藍色按鈕，點選 [下載] 即可。</font></p>
+<ul>
+<li><font color="#aaa">UI設計稿</font></li>
+</ul>
+<p><img src="https://i.imgur.com/Iqz3edI.png" alt="UI設計稿"></p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="第一步，切-CSS"><a href="#第一步，切-CSS" class="headerlink" title="第一步，切 CSS"></a>第一步，切 CSS</h2><p>這部分我真的花很多時間思考，不過事實上並不難，只需要花時間一步一步邊做邊思考。</p>
+<h3 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h3><p>這邊就沒啥好說的，就把基礎的畫面切出來，沒甚麼問題就往後面看吧。</p>
+<p>HTML</p>
+<script src="https://gist.github.com/kevinshu1995/de26bfce5c11fa4b7214cd76f920fbd9.js?file=clock-01.html"></script>
+
+<p>SCSS</p>
+<script src="https://gist.github.com/kevinshu1995/de26bfce5c11fa4b7214cd76f920fbd9.js?file=clock-01.scss"></script>
+
+<p><img src="https://i.imgur.com/NzAezBU.png" alt></p>
+<h3 id="2-裝飾線、點"><a href="#2-裝飾線、點" class="headerlink" title="2. 裝飾線、點"></a>2. 裝飾線、點</h3><p>這邊程式碼有點長，說明一下我的作法。</p>
+<p>三十個元素，每一個元素都跟父元素同寬，設定裝飾線的高度，再用偽元素做兩邊的裝飾線、點，最後整個元素依照位置旋轉，每分鐘轉6度。</p>
+<p><code>.hour0</code>重複三十次再帶入HTML就好囉 QQ ，好啦其實可以用 SASS 的迴圈拉。</p>
+<script src="https://gist.github.com/kevinshu1995/de26bfce5c11fa4b7214cd76f920fbd9.js?file=clock-02.scss"></script>
+
+<p><em>順帶一提這邊我發現六角提供的設計稿是每小時中間有五個點，但是我想要讓每一格都是一秒或一分鐘，因此我把它修改成四個點。</em></p>
+<p>如下圖。</p>
+<p><img src="https://i.imgur.com/yhDI8EJ.png" alt></p>
+<p>這邊完整的程式碼有點太長了，所以請移駕 <a href="https://codepen.io/kevinshu/pen/XWbjvOg" target="_blank" rel="external nofollow noopener noreferrer">codepen</a> 。</p>
+<h3 id="3-時鐘上的字"><a href="#3-時鐘上的字" class="headerlink" title="3. 時鐘上的字"></a>3. 時鐘上的字</h3><p>調整文字的旋轉作法其實跟裝飾線差不多，只不過父元素轉過去之後，字還要再<strong>旋轉</strong>回來，看起來才會是正的。</p>
+<p>這邊就直接看程式碼吧，一樣可以用迴圈 ~</p>
+<p>順便附上 <a href="https://codepen.io/kevinshu/pen/LYVbyYr" target="_blank" rel="external nofollow noopener noreferrer">codepen</a> </p>
+<script src="https://gist.github.com/kevinshu1995/de26bfce5c11fa4b7214cd76f920fbd9.js?file=clock-03.scss"></script>
+
+<h3 id="4-最後是指針"><a href="#4-最後是指針" class="headerlink" title="4. 最後是指針"></a>4. 最後是指針</h3><p>直接送上 <a href="https://codepen.io/kevinshu/pen/RwPojOg" target="_blank" rel="external nofollow noopener noreferrer">codepen</a> 程式碼。</p>
+<p>這邊的程式碼很長，直接過去看吧 XD ，需要注意的部分是這邊要測試一下<strong>旋轉時 12 點為 0 度</strong>，會比較好判斷，並且<strong>使旋轉的軸心在中間</strong>，這樣用 JS 控制時會比較輕鬆。</p>
+<p>完成 ! </p>
+<p><img src="https://i.imgur.com/9gGrg7B.png" alt></p>
+<p>等等，是不是忘了 JS 。</p>
+<h2 id="進入-JS-控制指針拉"><a href="#進入-JS-控制指針拉" class="headerlink" title="進入 JS 控制指針拉"></a>進入 JS 控制指針拉</h2><h2 id="抓取時間"><a href="#抓取時間" class="headerlink" title="抓取時間"></a>抓取時間</h2><p>這邊要使用的是 <code>new Date()</code>，直接在開發人員工具測試時會發現它會直接抓取現在的時間。<br>可以參考 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" rel="external nofollow noopener noreferrer">MDN</a> 的說明。</p>
+<p>只要宣告一個變數之後，可以透過<code>getHours()</code>取得小時、<code>getMinutes()</code>取得分鐘、<code>getSeconds()</code>取得秒數。</p>
+<script src="https://gist.github.com/kevinshu1995/de26bfce5c11fa4b7214cd76f920fbd9.js?file=clock-01.js"></script>
+
+<p>其他屬性可以前往 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date#JavaScript_Date_%E7%89%A9%E4%BB%B6%E5%AF%A6%E9%AB%94" target="_blank" rel="external nofollow noopener noreferrer">MDN</a> 看看~</p>
+<h2 id="抓取指針角度"><a href="#抓取指針角度" class="headerlink" title="抓取指針角度"></a>抓取指針角度</h2><p>既然已經抓取好時間，接下來試試看怎麼樣可以輸入參數來控制指針角度吧！<br>從<strong>秒針</strong>開始做會比較好思考，因為會根據現在的秒數直接指在指定的秒數，不像是時針、分針會根據秒數與分鐘數多轉一點點。</p>
+<h3 id="1-秒針"><a href="#1-秒針" class="headerlink" title="1. 秒針"></a>1. 秒針</h3><p>以下是我在腦內的思考流程XD</p>
+<blockquote>
+<p>假設現在是 0 秒的話，很明顯就是轉 0 度，如果是 10 秒的話要轉幾度呢?<br>轉一圈是 360 度、 60 秒，因此一秒會轉 360/60 = 6 度。<br>所以 <strong>10 秒 就是 10 * 6(每秒轉動6度) = 60 度</strong></p>
+<p><em>P.S. 這邊預設角度 0 度時指針是指向 12 點。</em></p>
+</blockquote>
+<script src="https://gist.github.com/kevinshu1995/de26bfce5c11fa4b7214cd76f920fbd9.js?file=clock-02.js"></script>
+
+<h3 id="2-分針"><a href="#2-分針" class="headerlink" title="2. 分針"></a>2. 分針</h3><p>先看看程式碼吧！</p>
+<script src="https://gist.github.com/kevinshu1995/de26bfce5c11fa4b7214cd76f920fbd9.js?file=clock-03.js"></script>
+
+<blockquote>
+<p>一樣是每分鐘會轉 6 度，但是！<br>在一分鐘內，分針會慢慢地轉到下一個 6 度。</p>
+<p>所以要計算現在分鐘數所轉的角度加上每秒會增加的角度。</p>
+<p>每秒會增加的角度 -&gt;<br>每 60 秒秒針會轉 6 度，每 10 秒轉 1 度。</p>
+<p>因此最後算式是 ( 現在分鐘數 ) * 6 + ( 現在秒數 ) / 10，就是現在的角度啦！</p>
+</blockquote>
+<h3 id="3-時針"><a href="#3-時針" class="headerlink" title="3. 時針"></a>3. 時針</h3><p>其實這邊的就跟分針一樣的作法，只不過可以多一個判斷如果超過 12 點可以扣掉 12 ( 但後來想想其實沒有也沒差 )。</p>
+<script src="https://gist.github.com/kevinshu1995/de26bfce5c11fa4b7214cd76f920fbd9.js?file=clock-04.js"></script>
+
+<h3 id="4-最後的最後"><a href="#4-最後的最後" class="headerlink" title="4. 最後的最後"></a>4. 最後的最後</h3><p>接下來要使用的是如何讓 JS 一直去抓取現在的時間並且控制指針的角度，就要用到下面的語法。</p>
+<p><code>setInterval()</code> <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/setInterval" target="_blank" rel="external nofollow noopener noreferrer">MDN傳送門</a><br>固定延遲了某段時間之後，才去執行對應的程式碼，然後「不斷循環」。</p>
+<p><em>P.S. 完整語法是<code>window.setInterval</code></em></p>
+<p>把程式全部整合起來吧~</p>
+<script src="https://gist.github.com/kevinshu1995/de26bfce5c11fa4b7214cd76f920fbd9.js?file=clock-05.js"></script>
+
+<h2 id="搭啦-完成"><a href="#搭啦-完成" class="headerlink" title="搭啦 ~ 完成"></a>搭啦 ~ 完成</h2><p><a href="https://kevinshu1995.github.io/hex-js-002-clock/">Github page</a> 請放大一點看，文字才不會跑版 QQ</p>
+<p class="codepen" data-height="500" data-theme-id="default" data-default-tab="js,result" data-user="kevinshu" data-slug-hash="OJVRNRM" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="時鐘-Clock - JS 地下城">
+  <span>See the Pen <a href="https://codepen.io/kevinshu/pen/OJVRNRM" target="_blank" rel="external nofollow noopener noreferrer">
+  時鐘-Clock - JS 地下城</a> by kevinshu (<a href="https://codepen.io/kevinshu" target="_blank" rel="external nofollow noopener noreferrer">@kevinshu</a>)
+  on <a href="https://codepen.io" target="_blank" rel="external nofollow noopener noreferrer">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+<h6 id="tags-JS-Web-SASS-CSS"><a href="#tags-JS-Web-SASS-CSS" class="headerlink" title="tags: JS Web SASS CSS"></a>tags: <code>JS</code> <code>Web</code> <code>SASS</code> <code>CSS</code></h6>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>Kevin
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" title="CSS、JS切個時鐘吧 | JS地下城 - 002">https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>歡迎關注我的其它發布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/HTML/" rel="tag"># HTML</a>
+              <a href="/blog/tags/CSS/" rel="tag"># CSS</a>
+              <a href="/blog/tags/JavaScript/" rel="tag"># JavaScript</a>
+              <a href="/blog/tags/JS%E5%9C%B0%E4%B8%8B%E5%9F%8E/" rel="tag"># JS地下城</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/JSDungeons/20200219/99449695/" rel="prev" title="用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+      <i class="fa fa-chevron-left"></i> 用 JavaScript 切出九九乘法表 | JS地下城 - 001
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/learningexp/20200530/4039908204/" rel="next" title="線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+      線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步，切-CSS"><span class="nav-number">1.</span> <span class="nav-text">第一步，切 CSS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-背景"><span class="nav-number">1.1.</span> <span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-裝飾線、點"><span class="nav-number">1.2.</span> <span class="nav-text">2. 裝飾線、點</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-時鐘上的字"><span class="nav-number">1.3.</span> <span class="nav-text">3. 時鐘上的字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-最後是指針"><span class="nav-number">1.4.</span> <span class="nav-text">4. 最後是指針</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#進入-JS-控制指針拉"><span class="nav-number">2.</span> <span class="nav-text">進入 JS 控制指針拉</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抓取時間"><span class="nav-number">3.</span> <span class="nav-text">抓取時間</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抓取指針角度"><span class="nav-number">4.</span> <span class="nav-text">抓取指針角度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-秒針"><span class="nav-number">4.1.</span> <span class="nav-text">1. 秒針</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-分針"><span class="nav-number">4.2.</span> <span class="nav-text">2. 分針</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-時針"><span class="nav-number">4.3.</span> <span class="nav-text">3. 時針</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-最後的最後"><span class="nav-number">4.4.</span> <span class="nav-text">4. 最後的最後</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭啦-完成"><span class="nav-number">5.</span> <span class="nav-text">搭啦 ~ 完成</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#tags-JS-Web-SASS-CSS"><span class="nav-number">5.0.0.0.1.</span> <span class="nav-text">tags: JS Web SASS CSS</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Kevin" src="/blog/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Kevin</p>
+  <div class="site-description" itemprop="description">學得越多，懂得越少</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分類</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/kevinshu1995" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;kevinshu1995" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/kevinshu1995@gmail.com" title="E-Mail → kevinshu1995@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/wenshiu.hsu" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;wenshiu.hsu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-facebook fa-fw"></i>FB Page</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/kevinshu" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;kevinshu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="總字數">12k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">11 分鐘</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="external nofollow noopener noreferrer" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/";
+    this.page.identifier = "JSDungeons/20200304/357102620/";
+    this.page.title = "CSS、JS切個時鐘吧 | JS地下城 - 002";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://kevinshu1995.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
