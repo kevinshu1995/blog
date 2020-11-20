@@ -5,9 +5,9 @@
 # Site
 title: "前端路上"
 subtitle: Web & Photograph & Life
-description: "學得越多，懂得越少"
-keywords: HTML,CSS,Javascript,Web
-author: Kevin
+description: "Hi，這個部落格記錄了我的學習筆記、生活雜事 | 我是網頁設計師，曾經是個半吊子的平面設計，後來突然發覺寫網頁超好玩，目標成為真正的前端工程師 | 學得越多，懂得越少"
+keywords: HTML,CSS,JavaScript,Web,Kevin,Hsu,Blog,F2E,Web-Design,許文修,前端,網頁,修
+author: Kevin Hsu
 language: zh-TW
 timezone: ""
 
@@ -135,8 +135,12 @@ plugin:
   - hexo-generator-feed
 #Feed Atom
 feed:
-  type: atom
-  path: atom.xml
+  type:
+    - atom
+    - rss2
+  path:
+    - atom.xml
+    - rss2.xml
   limit: 20
 
 #hexo-autonofollow 自動加入非友情連結
@@ -215,7 +219,7 @@ theme_config:
     copyright:
 
     # Powered by Hexo & NexT
-    powered: true
+    powered: false
 
     # Beian ICP and gongan information for Chinese users. See: https://beian.miit.gov.cn, http://www.beian.gov.cn
     beian:
@@ -250,7 +254,7 @@ theme_config:
   #scheme: Gemini
 
   # Dark Mode
-  darkmode: false
+  darkmode: ture
 
   # ---------------------------------------------------------------
   # Menu Settings
@@ -264,17 +268,17 @@ theme_config:
   menu:
     home: / || fa fa-home
     #about: /about/ || fa fa-user
-    #tags: /tags/ || fa fa-tags
-    categories: /categories/ || fa fa-th
+    tags: /tags/ || fa fa-tags
+    # categories: /categories/ || fa fa-th
     archives: /archives/ || fa fa-archive
     #schedule: /schedule/ || fa fa-calendar
-    #sitemap: /sitemap.xml || fa fa-sitemap
+    # sitemap: /sitemap.xml || fa fa-sitemap
     #commonweal: /404/ || fa fa-heartbeat
 
   # Enable / Disable menu icons / item badges.
   menu_settings:
     icons: true
-    badges: false
+    badges: true
 
   # ---------------------------------------------------------------
   # Sidebar Settings
@@ -303,7 +307,7 @@ theme_config:
     # Sidebar offset from top menubar in pixels (only for Pisces | Gemini).
     offset: 12
     # Enable sidebar on narrow view (only for Muse | Mist).
-    onmobile: false
+    onmobile: true
 
   # Sidebar Avatar
   avatar:
@@ -346,7 +350,8 @@ theme_config:
     layout: block
 
   links:
-    #Title: http://yoursite.com
+    個人網站: https://kevinshu1995.github.io/
+    JS地下城: https://kevinshu1995.github.io/hex_jsDungeon/
 
   # Table of Contents in the Sidebar
   # Front-matter variable (unsupport wrap expand_all).
@@ -387,8 +392,8 @@ theme_config:
     item_text: true
     created_at: true
     updated_at:
-      enable: true
-      another_day: true
+      enable: false
+      another_day: false
     categories: true
 
   # Post wordcount display settings
@@ -399,7 +404,7 @@ theme_config:
     item_text_total: false
 
   # Use icon instead of the symbol # to indicate the tag at the bottom of the post
-  tag_icon: false
+  tag_icon: ture
 
   # Reward (Donate)
   # Front-matter variable (unsupport animation).
@@ -480,11 +485,11 @@ theme_config:
   # Set the text alignment in posts / pages.
   text_align:
     # Available values: start | end | left | right | center | justify | justify-all | match-parent
-    desktop: justify
-    mobile: justify
+    desktop: left
+    mobile: left
 
   # Reduce padding / margin indents on devices with narrow width.
-  mobile_layout_economy: false
+  mobile_layout_economy: true
 
   # Android Chrome header panel color ($brand-bg / $headband-bg => $black-deep).
   android_chrome_color: "#222"
@@ -510,15 +515,15 @@ theme_config:
     # Back to top in sidebar.
     sidebar: false
     # Scroll percent label in b2t button.
-    scrollpercent: false
+    scrollpercent: true
 
   # Reading progress bar
   reading_progress:
-    enable: false
-    # Available values: top | bottom
+    enable: ture
+    Available values: top
     position: top
-    color: "#37c6c0"
-    height: 3px
+    color: "#ffffff"
+    height: 7px
 
   # Bookmark Support
   bookmark:
@@ -603,7 +608,7 @@ theme_config:
 
   # Google Webmaster tools verification.
   # See: https://www.google.com/webmasters
-  google_site_verification:
+  google_site_verification: 7JX25-KUbaGIe_Tlk0ocmcZDaYagTvVSmwsCJ7XfW2I
 
   # Bing Webmaster tools verification.
   # See: https://www.bing.com/webmaster
@@ -976,16 +981,16 @@ theme_config:
   # Dependencies: https://github.com/theme-next/theme-next-pace
   # For more information: https://github.com/HubSpot/pace
   pace:
-    enable: false
+    enable: true
     # Themes list:
     # big-counter | bounce | barber-shop | center-atom | center-circle | center-radar | center-simple
     # corner-indicator | fill-left | flat-top | flash | loading-bar | mac-osx | material | minimal
-    theme: minimal
+    theme: flash
 
   # JavaScript 3D library.
   # Dependencies: https://github.com/theme-next/theme-next-three
   three:
-    enable: false
+    enable: true
     three_waves: false
     canvas_lines: false
     canvas_sphere: false
