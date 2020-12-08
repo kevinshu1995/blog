@@ -6,7 +6,7 @@
   <link href="https://kevinshu1995.github.io/blog/atom.xml" rel="self"/>
   
   <link href="https://kevinshu1995.github.io/blog/"/>
-  <updated>2020-11-19T15:50:28.730Z</updated>
+  <updated>2020-12-08T14:37:41.479Z</updated>
   <id>https://kevinshu1995.github.io/blog/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001</title>
+    <link href="https://kevinshu1995.github.io/blog/codingnotes/20201208/907355643/"/>
+    <id>https://kevinshu1995.github.io/blog/codingnotes/20201208/907355643/</id>
+    <published>2020-12-08T14:14:09.000Z</published>
+    <updated>2020-12-08T14:37:41.479Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="gulp-gh-pages-deploy-失敗-QQ-程式筆記-001"><a href="#gulp-gh-pages-deploy-失敗-QQ-程式筆記-001" class="headerlink" title="gulp-gh-pages deploy 失敗 QQ | 程式筆記 - 001"></a>gulp-gh-pages deploy 失敗 QQ | 程式筆記 - 001</h1><p>前陣子修改了一下 JS 地下城的網頁時，發現 gulp-gh-pages deploy 時會出現錯誤。</p><p>錯誤如下</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Error in plugin &#39;gulp-gh-pages&#39;</span><br><span class="line">Message:</span><br><span class="line">    Command failed: git pull</span><br><span class="line">Your configuration specifies to merge with the ref &#39;refs&#x2F;heads&#x2F;gh-pages&#39;</span><br><span class="line">from the remote, but no such ref was fetched.</span><br><span class="line"></span><br><span class="line">Details:</span><br><span class="line">    killed: false</span><br><span class="line">    code: 1</span><br><span class="line">    signal: null</span><br><span class="line">    cmd: git pull</span><br></pre></td></tr></table></figure><p>上網查了一下，找到原因是，gulp-gh-pages 主動將 .publish 資料夾裡的檔案存為暫存，只要把 .publish 資料夾裡的檔案清空就可以重新 deploy 囉。</p><blockquote><p>參考來源: <a href="https://github.com/GovLab/ogrx-2" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/GovLab/ogrx-2</a></p></blockquote><p>簡單寫一下作為紀錄，不然下次又找不到了。<br>頗短的文章，哈哈。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;gulp-gh-pages-deploy-失敗-QQ-程式筆記-001&quot;&gt;&lt;a href=&quot;#gulp-gh-pages-deploy-失敗-QQ-程式筆記-001&quot; class=&quot;headerlink&quot; title=&quot;gulp-gh-pages deploy 失</summary>
+      
+    
+    
+    
+    <category term="程式筆記" scheme="https://kevinshu1995.github.io/blog/categories/codingnotes/"/>
+    
+    
+    <category term="程式筆記" scheme="https://kevinshu1995.github.io/blog/tags/%E7%A8%8B%E5%BC%8F%E7%AD%86%E8%A8%98/"/>
+    
+    <category term="gulp" scheme="https://kevinshu1995.github.io/blog/tags/gulp/"/>
+    
+  </entry>
   
   <entry>
     <title>俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001</title>

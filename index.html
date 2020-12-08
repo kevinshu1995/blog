@@ -145,12 +145,12 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">5</span></a>
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">6</span></a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">8</span></a>
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">10</span></a>
 
   </li>
   </ul>
@@ -177,6 +177,95 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://kevinshu1995.github.io/blog/codingnotes/20201208/907355643/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.jpg">
+      <meta itemprop="name" content="Kevin Hsu">
+      <meta itemprop="description" content="Hi，這個部落格記錄了我的學習筆記、生活雜事 | 我是網頁設計師，曾經是個半吊子的平面設計，後來突然發覺寫網頁超好玩，目標成為真正的前端工程師 | 學得越多，懂得越少">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端路上">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/blog/codingnotes/20201208/907355643/" class="post-title-link" itemprop="url">gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2020-12-08 22:14:09" itemprop="dateCreated datePublished" datetime="2020-12-08T22:14:09+08:00">2020-12-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/codingnotes/" itemprop="url" rel="index"><span itemprop="name">程式筆記</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">文章字數：</span>
+              <span>475</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">所需閱讀時間 &asymp;</span>
+              <span>1 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="gulp-gh-pages-deploy-失敗-QQ-程式筆記-001"><a href="#gulp-gh-pages-deploy-失敗-QQ-程式筆記-001" class="headerlink" title="gulp-gh-pages deploy 失敗 QQ | 程式筆記 - 001"></a>gulp-gh-pages deploy 失敗 QQ | 程式筆記 - 001</h1><p>前陣子修改了一下 JS 地下城的網頁時，發現 gulp-gh-pages deploy 時會出現錯誤。</p>
+<p>錯誤如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Error in plugin &#39;gulp-gh-pages&#39;</span><br><span class="line">Message:</span><br><span class="line">    Command failed: git pull</span><br><span class="line">Your configuration specifies to merge with the ref &#39;refs&#x2F;heads&#x2F;gh-pages&#39;</span><br><span class="line">from the remote, but no such ref was fetched.</span><br><span class="line"></span><br><span class="line">Details:</span><br><span class="line">    killed: false</span><br><span class="line">    code: 1</span><br><span class="line">    signal: null</span><br><span class="line">    cmd: git pull</span><br></pre></td></tr></table></figure>
+
+<p>上網查了一下，找到原因是，gulp-gh-pages 主動將 .publish 資料夾裡的檔案存為暫存，只要把 .publish 資料夾裡的檔案清空就可以重新 deploy 囉。</p>
+<blockquote>
+<p>參考來源: <a href="https://github.com/GovLab/ogrx-2" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/GovLab/ogrx-2</a></p>
+</blockquote>
+<p>簡單寫一下作為紀錄，不然下次又找不到了。<br>頗短的文章，哈哈。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -574,101 +663,11 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.jpg">
-      <meta itemprop="name" content="Kevin Hsu">
-      <meta itemprop="description" content="Hi，這個部落格記錄了我的學習筆記、生活雜事 | 我是網頁設計師，曾經是個半吊子的平面設計，後來突然發覺寫網頁超好玩，目標成為真正的前端工程師 | 學得越多，懂得越少">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="前端路上">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/casualtalk/20200219/3056929099/" class="post-title-link" itemprop="url">《1917》最佳影片與導演獎熱門首選 | 電影雜談</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-
-              <time title="創建時間：2020-02-19 19:32:18" itemprop="dateCreated datePublished" datetime="2020-02-19T19:32:18+08:00">2020-02-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/casualtalk/" itemprop="url" rel="index"><span itemprop="name">生活亂談</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">文章字數：</span>
-              <span>1.4k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">所需閱讀時間 &asymp;</span>
-              <span>1 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="https://i.imgur.com/gNqhTxF.jpg" alt title="Photo Credit: IMDb"></p>
-<h2 id="一鏡到底的戰爭片-我還不看爆"><a href="#一鏡到底的戰爭片-我還不看爆" class="headerlink" title="一鏡到底的戰爭片!?我還不看爆"></a>一鏡到底的戰爭片!?我還不看爆</h2><p>某天看到有個 Youtuber 介紹這部電影，一聽到<strong>一鏡到底</strong>就想立刻衝到電影院。不過懶癌末期導致延後了一段時間。</p>
-<p>抱持高度期待的心態進電影院的我，因為習慣保留驚喜感，所以一如往常的略過各種預告與影評，老實說這部電影的背景故事、卡司、製作…等等，我完全不在意，我只在意一件事情。</p>
-<p>導演會怎麼以一鏡到底詮釋戰爭片。對！我就是這麼膚淺。</p>
-<p>《1917》在我心中的分數非常高，沒意外的話會是今年最愛的電影<br>( 欸！今年才剛開始欸XD</p>
-<br>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/casualtalk/20200219/3056929099/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="extend next" rel="next" href="/blog/page/2/"><i class="fa fa-angle-right" aria-label="下一頁"></i></a>
+  </nav>
 
 
 
@@ -734,18 +733,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分類</span>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">標籤</span></a>
       </div>
   </nav>
