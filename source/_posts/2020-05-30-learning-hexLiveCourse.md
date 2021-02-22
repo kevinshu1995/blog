@@ -8,7 +8,8 @@ keyword: '六角學院,線上直播課程'
 abbrlink: 4039908204
 date: 2020-05-30 19:33:59
 ---
-![](https://i.imgur.com/eEwXrOW.png)
+
+{% asset_img cover.png "'切版班大圖'"%}
 
 </br>
 </br>
@@ -29,7 +30,9 @@ date: 2020-05-30 19:33:59
 <!-- more -->
 
 其實還有很多其他的點，但我懶 :)
-![](https://i.imgur.com/fDON25V.png)
+
+{% asset_img fight.png "'Boss 戰況'"%}
+
 - 六角還有創造了BOSS讓大家一起擊潰他，雖然我好像不是很在意XDD
 
 </br>
@@ -60,6 +63,8 @@ date: 2020-05-30 19:33:59
 
 六角的用心你如果看不到，是不是瘋了
 
+{% asset_img slack.jpeg "'Slack'"%}
+
 ![](https://i.imgur.com/bY4SdAN.jpg)
 - 課程Slack群組截圖
 
@@ -81,7 +86,8 @@ date: 2020-05-30 19:33:59
 * **學習前端未來的輪廓**
     因為課程內容廣，所以即使沒有在課程中學得很完整，基本上也大概知道有哪些東西該補齊，後續課程講義也會留著，沒毛病
 
-![](https://i.imgur.com/6gnSOFs.png)
+{% asset_img excel.png "'Excel'"%}
+
 - 作業繳交的 Excel 表
 
 <br>
@@ -107,7 +113,7 @@ date: 2020-05-30 19:33:59
 我必須老實說，不會因為報名任何課程就會變強，會變強的人本來就會變強，不做作業不思考永遠不會進步。
 這堂直播課程可以是一個很強的推進器，踩緊油門一定會進步，關鍵還是自己。
 
-![](https://i.imgur.com/E8ArOdr.png)
+{% asset_img rank.png "'Rank'"%}
 - 六角還有幫大家設定職業XD，還統計各組的作業繳交狀況
 
 </br>
@@ -123,7 +129,7 @@ date: 2020-05-30 19:33:59
 
 很開心可以參加到這堂課，本來自己也很不確定到底要不要花這筆錢報名，所幸最後真的學了很多我沒想到的，而且還送課程，六角是慈善機構嗎?
 
-![](https://i.imgur.com/xfvTncS.jpg)
+{% asset_img homework.jpg "'Homework'"%}
 - 第五周的後台系統切版，Bootstrap實作
 
 </br>
