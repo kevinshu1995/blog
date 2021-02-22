@@ -23,26 +23,25 @@
     var CONFIG = {"hostname":"kevinshu1995.github.io","root":"/blog/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="馬上又來了第二篇的 JS 地下城文章，這次的目標是時鐘。 一看到介面全部使用 CSS 手寫繪製，整個就嚇傻了，感覺很複雜要花很多時間切，本來有點想偷懶直接貼圖上去，後來上網查了一下別人都怎麼做的時候，突然發現好像也不會太難，於是就毅然決然地切了QQ。 搞了半天 CSS 花超多時間，我以為我是在練習 JS 。 XDDD   好啦！不要廢話了，來看看這次的目標吧。     BOSS 弱點  –【特定技">
+  <meta name="description" content=".gist tbody tr:nth-of-type(odd){background: none}   馬上又來了第二篇的 JS 地下城文章，這次的目標是時鐘。 一看到介面全部使用 CSS 手寫繪製，整個就嚇傻了，感覺很複雜要花很多時間切，本來有點想偷懶直接貼圖上去，後來上網查了一下別人都怎麼做的時候，突然發現好像也不會太難，於是就毅然決然地切了QQ。 搞了半天 CSS 花超多時間，我以為我是在">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CSS、JS切個時鐘吧 | JS地下城 - 002">
 <meta property="og:url" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/index.html">
 <meta property="og:site_name" content="前端路上">
-<meta property="og:description" content="馬上又來了第二篇的 JS 地下城文章，這次的目標是時鐘。 一看到介面全部使用 CSS 手寫繪製，整個就嚇傻了，感覺很複雜要花很多時間切，本來有點想偷懶直接貼圖上去，後來上網查了一下別人都怎麼做的時候，突然發現好像也不會太難，於是就毅然決然地切了QQ。 搞了半天 CSS 花超多時間，我以為我是在練習 JS 。 XDDD   好啦！不要廢話了，來看看這次的目標吧。     BOSS 弱點  –【特定技">
+<meta property="og:description" content=".gist tbody tr:nth-of-type(odd){background: none}   馬上又來了第二篇的 JS 地下城文章，這次的目標是時鐘。 一看到介面全部使用 CSS 手寫繪製，整個就嚇傻了，感覺很複雜要花很多時間切，本來有點想偷懶直接貼圖上去，後來上網查了一下別人都怎麼做的時候，突然發現好像也不會太難，於是就毅然決然地切了QQ。 搞了半天 CSS 花超多時間，我以為我是在">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://i.imgur.com/Iqz3edI.png">
-<meta property="og:image" content="https://i.imgur.com/NzAezBU.png">
-<meta property="og:image" content="https://i.imgur.com/yhDI8EJ.png">
-<meta property="og:image" content="https://i.imgur.com/9gGrg7B.png">
+<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/process-1.png">
+<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/process-2.png">
+<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/process-3.png">
 <meta property="article:published_time" content="2020-03-04T11:56:49.000Z">
-<meta property="article:modified_time" content="2020-11-19T15:31:33.402Z">
+<meta property="article:modified_time" content="2021-02-22T07:49:15.640Z">
 <meta property="article:author" content="Kevin Hsu">
 <meta property="article:tag" content="HTML">
 <meta property="article:tag" content="CSS">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="JS地下城">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.imgur.com/Iqz3edI.png">
+<meta name="twitter:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/process-1.png">
 
 <link rel="canonical" href="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/">
 
@@ -143,7 +142,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">6</span></a>
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">7</span></a>
 
   </li>
         <li class="menu-item menu-item-tags">
@@ -240,7 +239,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>馬上又來了第二篇的 JS 地下城文章，這次的目標是時鐘。</p>
+        <style> .gist tbody tr:nth-of-type(odd){background: none} </style>
+
+<p>馬上又來了第二篇的 JS 地下城文章，這次的目標是時鐘。</p>
 <p>一看到介面全部使用 <strong>CSS 手寫繪製</strong>，整個就嚇傻了，感覺很複雜要花很多時間切，本來有點想偷懶直接貼圖上去，後來上網查了一下別人都怎麼做的時候，突然發現好像也不會太難，於是就毅然決然地切了QQ。</p>
 <p>搞了半天 CSS 花超多時間，我以為我是在練習 JS 。 XDDD</p>
 <br>
@@ -256,7 +257,7 @@
 <ul>
 <li><font color="#aaa">UI設計稿</font></li>
 </ul>
-<p><img src="https://i.imgur.com/Iqz3edI.png" alt="UI設計稿"></p>
+
 </blockquote>
 <a id="more"></a>
 
@@ -268,7 +269,8 @@
 <p>SCSS</p>
 <script src="https://gist.github.com/kevinshu1995/de26bfce5c11fa4b7214cd76f920fbd9.js?file=clock-01.scss"></script>
 
-<p><img src="https://i.imgur.com/NzAezBU.png" alt></p>
+<img src="/blog/JSDungeons/20200304/357102620/process-1.png" class title="Step 1">
+
 <h3 id="2-裝飾線、點"><a href="#2-裝飾線、點" class="headerlink" title="2. 裝飾線、點"></a>2. 裝飾線、點</h3><p>這邊程式碼有點長，說明一下我的作法。</p>
 <p>三十個元素，每一個元素都跟父元素同寬，設定裝飾線的高度，再用偽元素做兩邊的裝飾線、點，最後整個元素依照位置旋轉，每分鐘轉6度。</p>
 <p><code>.hour0</code>重複三十次再帶入HTML就好囉 QQ ，好啦其實可以用 SASS 的迴圈拉。</p>
@@ -276,7 +278,8 @@
 
 <p><em>順帶一提這邊我發現六角提供的設計稿是每小時中間有五個點，但是我想要讓每一格都是一秒或一分鐘，因此我把它修改成四個點。</em></p>
 <p>如下圖。</p>
-<p><img src="https://i.imgur.com/yhDI8EJ.png" alt></p>
+<img src="/blog/JSDungeons/20200304/357102620/process-2.png" class title="Step 2">
+
 <p>這邊完整的程式碼有點太長了，所以請移駕 <a href="https://codepen.io/kevinshu/pen/XWbjvOg" target="_blank" rel="external nofollow noopener noreferrer">codepen</a> 。</p>
 <h3 id="3-時鐘上的字"><a href="#3-時鐘上的字" class="headerlink" title="3. 時鐘上的字"></a>3. 時鐘上的字</h3><p>調整文字的旋轉作法其實跟裝飾線差不多，只不過父元素轉過去之後，字還要再<strong>旋轉</strong>回來，看起來才會是正的。</p>
 <p>這邊就直接看程式碼吧，一樣可以用迴圈 ~</p>
@@ -286,7 +289,8 @@
 <h3 id="4-最後是指針"><a href="#4-最後是指針" class="headerlink" title="4. 最後是指針"></a>4. 最後是指針</h3><p>直接送上 <a href="https://codepen.io/kevinshu/pen/RwPojOg" target="_blank" rel="external nofollow noopener noreferrer">codepen</a> 程式碼。</p>
 <p>這邊的程式碼很長，直接過去看吧 XD ，需要注意的部分是這邊要測試一下<strong>旋轉時 12 點為 0 度</strong>，會比較好判斷，並且<strong>使旋轉的軸心在中間</strong>，這樣用 JS 控制時會比較輕鬆。</p>
 <p>完成 ! </p>
-<p><img src="https://i.imgur.com/9gGrg7B.png" alt></p>
+<img src="/blog/JSDungeons/20200304/357102620/process-3.png" class title="Step 3">
+
 <p>等等，是不是忘了 JS 。</p>
 <h2 id="進入-JS-控制指針拉"><a href="#進入-JS-控制指針拉" class="headerlink" title="進入 JS 控制指針拉"></a>進入 JS 控制指針拉</h2><h2 id="抓取時間"><a href="#抓取時間" class="headerlink" title="抓取時間"></a>抓取時間</h2><p>這邊要使用的是 <code>new Date()</code>，直接在開發人員工具測試時會發現它會直接抓取現在的時間。<br>可以參考 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" rel="external nofollow noopener noreferrer">MDN</a> 的說明。</p>
 <p>只要宣告一個變數之後，可以透過<code>getHours()</code>取得小時、<code>getMinutes()</code>取得分鐘、<code>getSeconds()</code>取得秒數。</p>
@@ -472,7 +476,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -536,8 +540,8 @@
 
 <div class="copyright">
   
-  &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -546,12 +550,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="總字數">12k</span>
+    <span title="總字數">14k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">11 分鐘</span>
+    <span title="所需總閱讀時間">12 分鐘</span>
 </div>
 
         
