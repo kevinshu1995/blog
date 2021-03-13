@@ -1,3 +1,9 @@
 [submodule "themes/next"]
 	path = themes/next
 	url = https://github.com/theme-next/hexo-theme-next
+[submodule "themes/hexo-theme-forked-edinburgh"]
+	path = themes/hexo-theme-forked-edinburgh
+	url = https://github.com/kevinshu1995/hexo-theme-forked-edinburgh.git
+[submodule "themes/hexo-theme-tranquilpeak"]
+	path = themes/hexo-theme-tranquilpeak
+	url = https://github.com/kevinshu1995/hexo-theme-tranquilpeak.git
