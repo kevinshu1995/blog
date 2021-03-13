@@ -113,6 +113,7 @@ pagination_dir: page
 include:
 exclude:
 ignore:
+  - "**/source/images/*/_ignored"
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
