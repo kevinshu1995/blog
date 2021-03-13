@@ -1,243 +1,260 @@
+
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-tw">
+    
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
-  <meta name="google-site-verification" content="7JX25-KUbaGIe_Tlk0ocmcZDaYagTvVSmwsCJ7XfW2I">
-
-<link rel="stylesheet" href="/blog/css/main.css">
-
-<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
-<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="/blog/lib/pace/pace-theme-flash.min.css">
-  <script src="/blog/lib/pace/pace.min.js"></script>
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"kevinshu1995.github.io","root":"/blog/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
-  </script>
-
-  <meta name="description" content="BOSS 弱點 &gt; 【特定技術】數字位數過多時，不能因此而破版，計算機功能皆須齊全  【自我學習】請在此關卡中「自學一個你原本不太會的技巧」，投稿時分享你透過哪些資源學習，並寫範例程式碼講解該技巧，以及你如何應用在此關卡上。  UI 設計稿">
-<meta property="og:type" content="article">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="前端路上">
+    <title>不負責任的 JavaScript 計算機 | JS地下城 - 003 - 前端路上</title>
+    <meta name="author" content="Kevin Hsu">
+    
+        <meta name="keywords" content="HTML,CSS,JavaScript,Web,Kevin,Hsu,Blog,F2E,Web-Design,許文修,前端,網頁,修,JS地下城,JavaScript,HTML,CSS,六角學院">
+    
+    
+        <link rel="icon" href="https://kevinshu1995.github.io/blog/assets/images/favicon.ico">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/blog/atom.xml">
+        
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="/blog/rss2.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg"},"articleBody":"\n\n\n\nBOSS 弱點 &gt; 【特定技術】數字位數過多時，不能因此而破版，計算機功能皆須齊全\n\n【自我學習】請在此關卡中「自學一個你原本不太會的技巧」，投稿時分享你透過哪些資源學習，並寫範例程式碼講解該技巧，以及你如何應用在此關卡上。\n\nUI 設計稿\n\n\n\n\n\n\n\n\n\n前言 廢話其實早就寫好了，只是覺得寫的不好加上拖延症發作，不過終於還是寫了啦 XDD\n計算機我覺得不好寫，有好多邏輯判斷要寫 QQ，但是寫起來很有趣。這邊我算是參照 windows 內建計算機的邏輯寫的，目前看起來沒有太大問題，如果有的話再來解決吧~本來寫好了一個最初的版本之後，放了很久覺得在可讀性上面有很多進步的空間，於是就搞了 ES6 Class 的寫法重寫了一遍，雖然看起來不是最佳解，但我決定先這樣 XD。\n\n\n\n\n思路與流程思路主要分為兩個區塊，分別都是陣列。第一區，目前使用者正在加值的數字，二，暫存的數字與運算符號，也就是最上面公式的區域。\n流程零，監聽按鈕當使用者按下按鈕之後，根據按下的按鈕判斷要進行哪一個動作，使用事件代理會比較好，再來是 HTML 用 data 來讓 JS 可以透過 dataset 來取按鈕代表的值，這樣按鈕裡的文字不管替換成甚麼都不會影響到程式了。\n事件捕獲、事件冒泡 | MDN\n一，加值當使用者按數字的時候會將按下的數字依序放入代表加值區的陣列，其中包含邏輯的運算，例如小數點是否已經存在、目前陣列可以再加上數字零嗎。當使用者按下運算符號(加減乘除甚至等於)進入下一階段。\n\n加值區的陣列裡面每一個值只能是一個數字或是小數點。\n\n12let number = [1, 2, 3, 4, \".\", 5, 6];// 上面這樣實際上就是 1234.56\n\n\n實際寫法會像下面這樣 - 這邊只是示範監聽一個按鈕，實際上使用會用事件代理的方式監聽整個區塊 - function 的地方建議還是要拉出來寫喔~\n\nHTML\n1&lt;button data-key=\"1\" class=\"btn-one\"&gt;1&lt;/button&gt;\n\nJavaScript\n12345678// 監聽按鈕被點擊時，觸發存放數字到加值區的 functionlet numbers = [];const btn = document.querySelector(\".btn-one\");btn.addEventListener(\"click\", function (e) &#123;    const number = e.target.dataset.key;    numbers = [...numbers, number];    // ... 是 es6 的 Spread Syntax，或是要用 push 也行&#125;);\n\n\n\n二，置入公式\n\n當按下加減乘除時，將目前的加值區轉為數字與按下的運算符號分別取出放到同一個物件，再將此陣列存放到公式的陣列，再把加值區的陣列清空。陣列的範例如下。\n1234567891011let formula = [    &#123;        number: 123.45,        mark: \"division\",    &#125;,    &#123;        number: 0.123,        mark: \"equal\",    &#125;,];// 上面這樣實際轉換就是 123.45 ÷ 0.123 =\n\n\n\n三，循環\n\n上面兩個動作不斷的循環，直到按下等於。循環的過程中，加值區會不斷的增加數字、重置，公式的陣列則會一直不斷的推入新的物件，也能藉此記錄步驟。\n四，輸出結果\n當使用者按下等於時，進到這個步驟之前，一樣會做先步驟二(置入公式)，再將公式的陣列完整取出進行運算，得出結果，清除公式陣列!\n\n\n以上就是整個思考邏輯與流程，其中有許多小細節要小心，必須要多加測試 (所以是有沒有要學寫測試)。另外，更新加值區數字與公式到畫面上，其實就是在按下按鈕來驅動函式的，我想不會有太大問題。\n\n\n\n\n\n收尾一下不細講我的程式了，反正這麼難看不看也罷 XD，前後兩個版本時間相差了半年左右，中間補了不少知識，應該是有進步不少(吧總之這個題目學到了\n\n物件導向的基礎運用\n一點點點點的 Function Programing\n\n\n\n\n\n最後附上連結，如下\n計算機\nGithub Source code\nGithub Page\n\n\n\n\n個人連結\nGithub @kevinHWS\nJS 地下城網站首頁\n歡迎來看看其他的JS作品\n\n\n\n\n\n\n\n本文章若有任何資訊誤植或侵權，煩請告知，我會立刻處理。","dateCreated":"2021-02-22T14:26:16+08:00","dateModified":"2021-03-12T00:18:34+08:00","datePublished":"2021-02-22T14:26:16+08:00","description":"拖延症發作之下好不容易寫成文章的一關，來來回回 JS 的部分也改了幾次，整個時程也有好幾個月。","headline":"不負責任的 JavaScript 計算機 | JS地下城 - 003","image":["jsDungeon_cover.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/"},"publisher":{"@type":"Organization","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg","logo":{"@type":"ImageObject","url":"avatar.jpg"}},"url":"https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/","keywords":"HTML, CSS, JavaScript, JS地下城","thumbnailUrl":"jsDungeon_cover.png"}</script>
+    <meta name="description" content="拖延症發作之下好不容易寫成文章的一關，來來回回 JS 的部分也改了幾次，整個時程也有好幾個月。">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="不負責任的 JavaScript 計算機 | JS地下城 - 003">
 <meta property="og:url" content="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/index.html">
 <meta property="og:site_name" content="前端路上">
-<meta property="og:description" content="BOSS 弱點 &gt; 【特定技術】數字位數過多時，不能因此而破版，計算機功能皆須齊全  【自我學習】請在此關卡中「自學一個你原本不太會的技巧」，投稿時分享你透過哪些資源學習，並寫範例程式碼講解該技巧，以及你如何應用在此關卡上。  UI 設計稿">
+<meta property="og:description" content="拖延症發作之下好不容易寫成文章的一關，來來回回 JS 的部分也改了幾次，整個時程也有好幾個月。">
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/jsDungeon_cover.png">
 <meta property="article:published_time" content="2021-02-22T06:26:16.000Z">
-<meta property="article:modified_time" content="2021-02-22T08:01:05.593Z">
+<meta property="article:modified_time" content="2021-03-11T16:18:34.325Z">
 <meta property="article:author" content="Kevin Hsu">
+<meta property="article:tag" content="JS地下城">
+<meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="HTML">
 <meta property="article:tag" content="CSS">
-<meta property="article:tag" content="JavaScript">
-<meta property="article:tag" content="JS地下城">
+<meta property="article:tag" content="六角學院">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/jsDungeon_cover.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://kevinshu1995.github.io/blog/assets/images/avatar.jpg">
+    
+    
+        <meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/jsDungeon_cover.png">
+        <meta class="swiftype" name="image" data-type="enum" content="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/jsDungeon_cover.png">
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/blog/assets/css/style-aqg342ostvvqc83gcjrrqtanescunoajgddgpistmzv0x84oe3c0cssbz4xc.min.css">
 
-<link rel="canonical" href="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/">
-
-
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-TW'
-  };
-</script>
-
-  <title>不負責任的 JavaScript 計算機 | JS地下城 - 003 | 前端路上</title>
-  
+    <!--STYLES END-->
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154890967-2"></script>
     <script>
-      if (CONFIG.hostname === location.hostname) {
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
+
         gtag('config', 'UA-154890967-2');
-      }
     </script>
 
 
+    
 
-
-
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-<link rel="alternate" href="/blog/atom.xml" title="前端路上" type="application/atom+xml">
-<link rel="alternate" href="/blog/rss2.xml" title="前端路上" type="application/rss+xml">
+    
+        
+    
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切換導航欄">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/blog/" aria-label>
+            前端路上
+        </a>
     </div>
-  </div>
+    
+        
+            <a class="header-right-icon open-algolia-search" href="#search" aria-label="打開鏈接: /blog/#search">
+        
+        
+            <i class="fa fa-search fa-lg"></i>
+        
+        </a>
+    
+</header>
 
-  <div class="site-meta">
+            <!-- Define author's picture -->
 
-    <a href="/blog/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">前端路上</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-      <p class="site-subtitle" itemprop="description">Web & Photograph & Life</p>
-  </div>
 
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/blog/#about" aria-label="閱讀有關作者的更多信息">
+                    <img class="sidebar-profile-picture" src="/blog/assets/images/avatar.jpg" alt="作者的圖片">
+                </a>
+                <h4 class="sidebar-profile-name">Kevin Hsu</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>嗨! 這裡主要寫網頁前端相關文章，偶爾寫一些音樂、影集、電影、遊戲類的文章，請多指教</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/" rel="noopener" title="首頁">
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">首頁</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/all-categories" rel="noopener" title="分類">
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">分類</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/all-tags" rel="noopener" title="標籤">
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">標籤</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/all-archives" rel="noopener" title="所有文章">
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">所有文章</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link open-algolia-search" href="#search" rel="noopener" title="搜尋">
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">搜尋</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://github.com/kevinshu1995" target="_blank" rel="external nofollow noopener noreferrer" title="GitHub">
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://kevinshu1995.github.io/" target="_blank" rel="noopener" title="個人網站">
+                        <i class="sidebar-button-icon fas fa-globe-americas" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">個人網站</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/" target="_blank" rel="external nofollow noopener noreferrer" title="LinkedIn">
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/kevinshu1995@gmail.com" rel="noopener" title="Email">
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Email</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/rss2.xml" rel="noopener" title="RSS">
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
     </div>
-  </div>
-</div>
-
-
-
-
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">7</span></a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">10</span></a>
-
-  </li>
-  </ul>
 </nav>
 
-
-
-
-</div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-  <div class="reading-progress-bar"></div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
             
-
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
     
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.jpg">
-      <meta itemprop="name" content="Kevin Hsu">
-      <meta itemprop="description" content="Hi，這個部落格記錄了我的學習筆記、生活雜事 | 我是網頁設計師，曾經是個半吊子的平面設計，後來突然發覺寫網頁超好玩，目標成為真正的前端工程師 | 學得越多，懂得越少">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="前端路上">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          不負責任的 JavaScript 計算機 | JS地下城 - 003
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            不負責任的 JavaScript 計算機 | JS地下城 - 003
         </h1>
-
+    
+    
         <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
+    <time datetime="2021-02-22T14:26:16+08:00">
+	
+		    2月 22, 2021
+    	
+    </time>
+    
+        <span>分類 </span>
+        
+    <a class="category-link" href="/blog/categories/JSDungeons/">JS地下城</a>
 
-              <time title="創建時間：2021-02-22 14:26:16" itemprop="dateCreated datePublished" datetime="2021-02-22T14:26:16+08:00">2021-02-22</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/JSDungeons/" itemprop="url" rel="index"><span itemprop="name">JS地下城</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">文章字數：</span>
-              <span>1.7k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">所需閱讀時間 &asymp;</span>
-              <span>2 分鐘</span>
-            </span>
-
-        </div>
-      </header>
 
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
+</div>
 
-      
-        <blockquote>
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+
+<blockquote>
 <ul>
 <li><p><font color="#aaa">BOSS 弱點</font> &gt; <font color="#aaa">【特定技術】數字位數過多時，不能因此而破版，計算機功能皆須齊全</font></p>
 </li>
@@ -328,302 +345,460 @@
 <br>
 
 <p><em>本文章若有任何資訊誤植或侵權，煩請告知，我會立刻處理。</em></p>
+            
 
-    </div>
 
-    
-    
-    
-        
-
-<div>
-<ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>作者： </strong>Kevin Hsu
-  </li>
-  <li class="post-copyright-link">
-    <strong>文章連結：</strong>
-    <a href="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="不負責任的 JavaScript 計算機 | JS地下城 - 003">https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
-  </li>
-</ul>
-</div>
-
-        
-
-  <div class="followme">
-    <p>歡迎關注我的其它發布渠道</p>
-
-    <div class="social-list">
-
-        <div class="social-item">
-          <a target="_blank" class="social-link" href="/atom.xml">
-            <span class="icon">
-              <i class="fa fa-rss"></i>
-            </span>
-
-            <span class="label">RSS</span>
-          </a>
         </div>
     </div>
-  </div>
-
-
-      <footer class="post-footer">
-          
-          <div class="post-tags">
-              <a href="/blog/tags/HTML/" rel="tag"><i class="fa fa-tag"></i> HTML</a>
-              <a href="/blog/tags/CSS/" rel="tag"><i class="fa fa-tag"></i> CSS</a>
-              <a href="/blog/tags/JavaScript/" rel="tag"><i class="fa fa-tag"></i> JavaScript</a>
-              <a href="/blog/tags/JS%E5%9C%B0%E4%B8%8B%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> JS地下城</a>
-          </div>
-
+    <div id="post-footer" class="post-footer main-content-wrap">
         
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">標籤</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/blog/tags/CSS/" rel="tag">CSS</a> <a class="tag tag--primary tag--small t-link" href="/blog/tags/HTML/" rel="tag">HTML</a> <a class="tag tag--primary tag--small t-link" href="/blog/tags/JS%E5%9C%B0%E4%B8%8B%E5%9F%8E/" rel="tag">JS地下城</a> <a class="tag tag--primary tag--small t-link" href="/blog/tags/JavaScript/" rel="tag">JavaScript</a>
 
-
+            </div>
         
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/blog/codingnotes/20201208/907355643/" rel="prev" title="gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001">
-      <i class="fa fa-chevron-left"></i> gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001
-    </a></div>
-      <div class="post-nav-item"></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
-          </div>
-          
-    
-  <div class="comments">
-    <div id="disqus_thread">
-      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
-    </div>
-  </div>
-  
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目錄
-        </li>
-        <li class="sidebar-nav-overview">
-          本站概要
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言-廢話"><span class="nav-number">1.</span> <span class="nav-text">前言 廢話</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路與流程"><span class="nav-number">2.</span> <span class="nav-text">思路與流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">2.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流程"><span class="nav-number">2.2.</span> <span class="nav-text">流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#零，監聽按鈕"><span class="nav-number">2.2.1.</span> <span class="nav-text">零，監聽按鈕</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一，加值"><span class="nav-number">2.2.2.</span> <span class="nav-text">一，加值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二，置入公式"><span class="nav-number">2.2.3.</span> <span class="nav-text">二，置入公式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三，循環"><span class="nav-number">2.2.4.</span> <span class="nav-text">三，循環</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四，輸出結果"><span class="nav-number">2.2.5.</span> <span class="nav-text">四，輸出結果</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#收尾一下"><span class="nav-number">3.</span> <span class="nav-text">收尾一下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最後附上連結，如下"><span class="nav-number">4.</span> <span class="nav-text">最後附上連結，如下</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="Kevin Hsu" src="/blog/images/avatar.jpg">
-  <p class="site-author-name" itemprop="name">Kevin Hsu</p>
-  <div class="site-description" itemprop="description">Hi，這個部落格記錄了我的學習筆記、生活雜事 | 我是網頁設計師，曾經是個半吊子的平面設計，後來突然發覺寫網頁超好玩，目標成為真正的前端工程師 | 學得越多，懂得越少</div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/blog/archives/">
         
-          <span class="site-state-item-count">7</span>
-          <span class="site-state-item-name">文章</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">4</span>
-        <span class="site-state-item-name">分類</span>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/blog/tags/">
-          
-        <span class="site-state-item-count">10</span>
-        <span class="site-state-item-name">標籤</span></a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/kevinshu1995" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;kevinshu1995" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="/blog/kevinshu1995@gmail.com" title="E-Mail → kevinshu1995@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://www.facebook.com/wenshiu.hsu" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;wenshiu.hsu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-facebook fa-fw"></i>FB Page</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://instagram.com/kevinshu" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;kevinshu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
-      </span>
-  </div>
-
-
-  <div class="links-of-blogroll motion-element">
-    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      Links
-    </div>
-    <ul class="links-of-blogroll-list">
-        <li class="links-of-blogroll-item">
-          <a href="https://kevinshu1995.github.io/" title="https:&#x2F;&#x2F;kevinshu1995.github.io&#x2F;">個人網站</a>
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/20210309/613471034/" data-tooltip="幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004" aria-label="上一篇: 幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/codingnotes/20201208/907355643/" data-tooltip="gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001" aria-label="下一篇: gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
         </li>
-        <li class="links-of-blogroll-item">
-          <a href="https://kevinshu1995.github.io/hex_jsDungeon/" title="https:&#x2F;&#x2F;kevinshu1995.github.io&#x2F;hex_jsDungeon&#x2F;">JS地下城</a>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Kommentieren">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
         </li>
     </ul>
-  </div>
+</div>
 
-      </div>
 
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
     </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
+</article>
 
 
-      </div>
-    </main>
 
-    <footer class="footer">
-      <div class="footer-inner">
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2021 Kevin Hsu. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/20210309/613471034/" data-tooltip="幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004" aria-label="上一篇: 幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/codingnotes/20201208/907355643/" data-tooltip="gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001" aria-label="下一篇: gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Kommentieren">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
         
 
-        
 
-<div class="copyright">
-  
-  &copy; 2020 – 
-  <span itemprop="copyrightYear">2021</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Kevin Hsu</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-chart-area"></i>
-    </span>
-    <span title="總字數">14k</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-    <span title="所需總閱讀時間">12 分鐘</span>
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/blog/assets/images/avatar.jpg" alt="作者的圖片">
+        
+            <h4 id="about-card-name">Kevin Hsu</h4>
+        
+            <div id="about-card-bio"><p>嗨! 這裡主要寫網頁前端相關文章，偶爾寫一些音樂、影集、電影、遊戲類的文章，請多指教</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>網頁設計 / 網頁前端</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                台灣 / 台北
+            </div>
+        
+    </div>
 </div>
 
         
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="external nofollow noopener noreferrer" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="/blog/assets/images/logo-algolia-nebula-blue-full.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search" class="form-control input--large search-input" placeholder="Search ">
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">沒有找到文章</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/cover.jpg" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
+                            <h3 class="media-heading">《1917》最佳影片與導演獎熱門首選 | 電影雜談</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年2月19日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p><strong>一鏡到底的戰爭片!?我還不看爆</strong>。本年度最愛的電影!!!</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/cover.png" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                            <h3 class="media-heading">用 JavaScript 切出九九乘法表 | JS地下城 - 001</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年2月19日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>第一篇技術文章就交給 JS 地下城了，六角學院出的 JS 地下城真讚，根據現成的設計稿與指定的技術來練習，之後就先以地下城作為主軸來寫文章吧。</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/cover.png" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
+                            <h3 class="media-heading">CSS、JS切個時鐘吧 | JS地下城 - 002</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年3月4日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>這次的目標是時鐘，這次的挑戰其實比較麻煩的是刻 CSS (XD，JS的部分反而一下就完成了，相信大家應該也覺得這關不會太難。</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/cover.png" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                            <h3 class="media-heading">線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年5月30日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>疫情下的多人線上群聚，酒精噴了就上。有點難跟上進度的社畜切版直播課程心路歷程 QQ</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/cover_epilogue.svg" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+                            <h3 class="media-heading">俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年11月19日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>今天在 Line 的社群上面，有位前輩釋出了公司內部的面試題，蠻有趣的就試做了一下，順便參考看看其他前輩都怎麼寫的，收穫良多 R~</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium" data-message-zero="沒有找到文章" data-message-one="找到 1 篇文章" data-message-other="找到 {n} 篇文章">
+                找到 9 篇文章
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/blog/assets/images/cover_white.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/blog/assets/js/script-oqtbq71gbu8ddxlzuekicwkkyqrs01nlmm6sbfr9xjq3dxtd5rb0blaoccyk.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+        <script>
+          var disqus_config = function() {
+            this.page.url = 'https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/';
+              
+            this.page.identifier = 'JSDungeons/20210222/2241008248/';
+              
+          };
+          (function() {
+            var d = document, s = d.createElement('script');
+            var disqus_shortname = 'kevinshu1995';
+            s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+          })();
+        </script>
+    
 
 
 
+    
+<script src="/blog/assets/js/moment-with-locales.js"></script>
+
+    
+<script src="/blog/assets/js/algoliasearch.js"></script>
+
+    <script>
+      var algoliaClient = algoliasearch('S3W8EV8SD2', '65e3cc5eed5e3c90368750d25cb26ca2');
+      var algoliaIndex = algoliaClient.initIndex('prod_hexoBlog');
+    </script>
 
 
-
-
-
-      </div>
-    </footer>
-  </div>
-
-  
-  <script src="/blog/lib/anime.min.js"></script>
-  <script src="/blog/lib/velocity/velocity.min.js"></script>
-  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/blog/js/utils.js"></script>
-
-<script src="/blog/js/motion.js"></script>
-
-
-<script src="/blog/js/schemes/pisces.js"></script>
-
-
-<script src="/blog/js/next-boot.js"></script>
-
-
-  <script defer src="/blog/lib/three/three.min.js"></script>
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-<script>
-  var disqus_config = function() {
-    this.page.url = "https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/";
-    this.page.identifier = "JSDungeons/20210222/2241008248/";
-    this.page.title = "不負責任的 JavaScript 計算機 | JS地下城 - 003";
-    };
-  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
-    if (window.DISQUS) {
-      DISQUS.reset({
-        reload: true,
-        config: disqus_config
-      });
-    } else {
-      var d = document, s = d.createElement('script');
-      s.src = 'https://kevinshu1995.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', '' + +new Date());
-      (d.head || d.body).appendChild(s);
-    }
-  });
-</script>
-
-</body>
+    </body>
 </html>
