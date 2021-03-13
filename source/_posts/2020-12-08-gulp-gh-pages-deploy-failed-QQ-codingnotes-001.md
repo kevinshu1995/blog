@@ -4,14 +4,18 @@ categories: 程式筆記
 tags:
   - 程式筆記
   - gulp
-keyword: '程式筆記,gulp,gulp-gh-pages'
+keywords: 
+  - 程式筆記
+  - gulp
+  - gulp-gh-pages
+thumbnailImagePosition: left
+thumbnailImage: cover_codingNote.svg
 abbrlink: 907355643
 date: 2020-12-08 22:14:09
 ---
 
-# gulp-gh-pages deploy 失敗 QQ | 程式筆記 - 001
-
-前陣子修改了一下 JS 地下城的網頁時，發現 gulp-gh-pages deploy 時會出現錯誤。
+前陣子修改了一下 JS 地下城的網頁時，發現 gulp-gh-pages deploy 時會出現錯誤，紀錄一下
+<!-- excerpt -->
 
 錯誤如下
 

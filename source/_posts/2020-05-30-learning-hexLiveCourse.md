@@ -4,10 +4,16 @@ categories: 學習經歷
 tags:
   - 六角
   - 前端學習
-keyword: '六角學院,線上直播課程'
+keywords: 
+    - 六角學院
+    - 線上直播課程
+thumbnailImagePosition: left
+thumbnailImage: cover.png
 abbrlink: 4039908204
 date: 2020-05-30 19:33:59
 ---
+疫情下的多人線上群聚，酒精噴了就上。有點難跟上進度的社畜切版直播課程心路歷程 QQ
+<!-- excerpt -->
 
 {% asset_img cover.png "'切版班大圖'"%}
 
