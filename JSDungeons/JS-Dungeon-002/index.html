@@ -21,18 +21,18 @@
             <link rel="alternate" type="application/rss+xml" title="RSS" href="/blog/rss2.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg"},"articleBody":"\n .gist tbody tr:nth-of-type(odd){background: none} \n\n馬上又來了第二篇的 JS 地下城文章，這次的目標是時鐘。\n一看到介面全部使用 CSS 手寫繪製，整個就嚇傻了，感覺很複雜要花很多時間切，本來有點想偷懶直接貼圖上去，後來上網查了一下別人都怎麼做的時候，突然發現好像也不會太難，於是就毅然決然地切了QQ。\n搞了半天 CSS 花超多時間，我以為我是在練習 JS 。 XDDD\n\n\n好啦！不要廢話了，來看看這次的目標吧。\n\n\n\n\nBOSS 弱點\n\n–【特定技術】需使用 JS 原生語法的 getDate() 撈取時間，不可用套件–【特定技術】需使用 JS 原生語法的 setTimeout() 或 setInterval()，持續讓秒針、分針、時針能夠以台北時區移動–【特定技術】介面請全部用 CSS2、CSS3 手寫繪製，什麼…？你說太強人所難？？那..用圖片也不是不行辣， 點選一下元素，右側控制列會有個藍色按鈕，點選 [下載] 即可。\n\nUI設計稿\n\n\n\n\n\n\n第一步，切 CSS這部分我真的花很多時間思考，不過事實上並不難，只需要花時間一步一步邊做邊思考。\n1. 背景這邊就沒啥好說的，就把基礎的畫面切出來，沒甚麼問題就往後面看吧。\nHTML\n\n\nSCSS\n\n\n\n\n2. 裝飾線、點這邊程式碼有點長，說明一下我的作法。\n三十個元素，每一個元素都跟父元素同寬，設定裝飾線的高度，再用偽元素做兩邊的裝飾線、點，最後整個元素依照位置旋轉，每分鐘轉6度。\n.hour0重複三十次再帶入HTML就好囉 QQ ，好啦其實可以用 SASS 的迴圈拉。\n\n\n順帶一提這邊我發現六角提供的設計稿是每小時中間有五個點，但是我想要讓每一格都是一秒或一分鐘，因此我把它修改成四個點。\n如下圖。\n\n\n這邊完整的程式碼有點太長了，所以請移駕 codepen 。\n3. 時鐘上的字調整文字的旋轉作法其實跟裝飾線差不多，只不過父元素轉過去之後，字還要再旋轉回來，看起來才會是正的。\n這邊就直接看程式碼吧，一樣可以用迴圈 ~\n順便附上 codepen \n\n\n4. 最後是指針直接送上 codepen 程式碼。\n這邊的程式碼很長，直接過去看吧 XD ，需要注意的部分是這邊要測試一下旋轉時 12 點為 0 度，會比較好判斷，並且使旋轉的軸心在中間，這樣用 JS 控制時會比較輕鬆。\n完成 ! \n\n\n等等，是不是忘了 JS 。\n進入 JS 控制指針拉抓取時間這邊要使用的是 new Date()，直接在開發人員工具測試時會發現它會直接抓取現在的時間。可以參考 MDN 的說明。\n只要宣告一個變數之後，可以透過getHours()取得小時、getMinutes()取得分鐘、getSeconds()取得秒數。\n\n\n其他屬性可以前往 MDN 看看~\n抓取指針角度既然已經抓取好時間，接下來試試看怎麼樣可以輸入參數來控制指針角度吧！從秒針開始做會比較好思考，因為會根據現在的秒數直接指在指定的秒數，不像是時針、分針會根據秒數與分鐘數多轉一點點。\n1. 秒針以下是我在腦內的思考流程XD\n\n假設現在是 0 秒的話，很明顯就是轉 0 度，如果是 10 秒的話要轉幾度呢?轉一圈是 360 度、 60 秒，因此一秒會轉 360/60 = 6 度。所以 10 秒 就是 10 * 6(每秒轉動6度) = 60 度\nP.S. 這邊預設角度 0 度時指針是指向 12 點。\n\n\n\n2. 分針先看看程式碼吧！\n\n\n\n一樣是每分鐘會轉 6 度，但是！在一分鐘內，分針會慢慢地轉到下一個 6 度。\n所以要計算現在分鐘數所轉的角度加上每秒會增加的角度。\n每秒會增加的角度 -&gt;每 60 秒秒針會轉 6 度，每 10 秒轉 1 度。\n因此最後算式是 ( 現在分鐘數 ) * 6 + ( 現在秒數 ) / 10，就是現在的角度啦！\n\n3. 時針其實這邊的就跟分針一樣的作法，只不過可以多一個判斷如果超過 12 點可以扣掉 12 ( 但後來想想其實沒有也沒差 )。\n\n\n4. 最後的最後接下來要使用的是如何讓 JS 一直去抓取現在的時間並且控制指針的角度，就要用到下面的語法。\nsetInterval() MDN傳送門固定延遲了某段時間之後，才去執行對應的程式碼，然後「不斷循環」。\nP.S. 完整語法是window.setInterval\n把程式全部整合起來吧~\n\n\n搭啦 ~ 完成Github page 請放大一點看，文字才不會跑版 QQ\n\n  See the Pen \n  時鐘-Clock - JS 地下城 by kevinshu (@kevinshu)\n  on CodePen.\n\n\n\ntags: JS Web SASS CSS","dateCreated":"2020-03-04T19:56:49+08:00","dateModified":"2021-03-12T00:20:17+08:00","datePublished":"2020-03-04T19:56:49+08:00","description":"這次的目標是時鐘，這次的挑戰其實比較麻煩的是刻 CSS (XD，JS的部分反而一下就完成了，相信大家應該也覺得這關不會太難。","headline":"CSS、JS切個時鐘吧 | JS地下城 - 002","image":["cover.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/"},"publisher":{"@type":"Organization","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg","logo":{"@type":"ImageObject","url":"avatar.jpg"}},"url":"https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/","keywords":"HTML, CSS, JavaScript, JS地下城","thumbnailUrl":"cover.png"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg"},"articleBody":"\n .gist tbody tr:nth-of-type(odd){background: none} \n\n馬上又來了第二篇的 JS 地下城文章，這次的目標是時鐘。\n一看到介面全部使用 CSS 手寫繪製，整個就嚇傻了，感覺很複雜要花很多時間切，本來有點想偷懶直接貼圖上去，後來上網查了一下別人都怎麼做的時候，突然發現好像也不會太難，於是就毅然決然地切了QQ。\n搞了半天 CSS 花超多時間，我以為我是在練習 JS 。 XDDD\n\n\n好啦！不要廢話了，來看看這次的目標吧。\n\n\n\n\nBOSS 弱點\n\n–【特定技術】需使用 JS 原生語法的 getDate() 撈取時間，不可用套件–【特定技術】需使用 JS 原生語法的 setTimeout() 或 setInterval()，持續讓秒針、分針、時針能夠以台北時區移動–【特定技術】介面請全部用 CSS2、CSS3 手寫繪製，什麼…？你說太強人所難？？那..用圖片也不是不行辣， 點選一下元素，右側控制列會有個藍色按鈕，點選 [下載] 即可。\n\nUI設計稿\n\n\n\n\n\n\n第一步，切 CSS這部分我真的花很多時間思考，不過事實上並不難，只需要花時間一步一步邊做邊思考。\n1. 背景這邊就沒啥好說的，就把基礎的畫面切出來，沒甚麼問題就往後面看吧。\nHTML\n\n\nSCSS\n\n\n\n\n2. 裝飾線、點這邊程式碼有點長，說明一下我的作法。\n三十個元素，每一個元素都跟父元素同寬，設定裝飾線的高度，再用偽元素做兩邊的裝飾線、點，最後整個元素依照位置旋轉，每分鐘轉6度。\n.hour0重複三十次再帶入HTML就好囉 QQ ，好啦其實可以用 SASS 的迴圈拉。\n\n\n順帶一提這邊我發現六角提供的設計稿是每小時中間有五個點，但是我想要讓每一格都是一秒或一分鐘，因此我把它修改成四個點。\n如下圖。\n\n\n這邊完整的程式碼有點太長了，所以請移駕 codepen 。\n3. 時鐘上的字調整文字的旋轉作法其實跟裝飾線差不多，只不過父元素轉過去之後，字還要再旋轉回來，看起來才會是正的。\n這邊就直接看程式碼吧，一樣可以用迴圈 ~\n順便附上 codepen \n\n\n4. 最後是指針直接送上 codepen 程式碼。\n這邊的程式碼很長，直接過去看吧 XD ，需要注意的部分是這邊要測試一下旋轉時 12 點為 0 度，會比較好判斷，並且使旋轉的軸心在中間，這樣用 JS 控制時會比較輕鬆。\n完成 ! \n\n\n等等，是不是忘了 JS 。\n進入 JS 控制指針拉抓取時間這邊要使用的是 new Date()，直接在開發人員工具測試時會發現它會直接抓取現在的時間。可以參考 MDN 的說明。\n只要宣告一個變數之後，可以透過getHours()取得小時、getMinutes()取得分鐘、getSeconds()取得秒數。\n\n\n其他屬性可以前往 MDN 看看~\n抓取指針角度既然已經抓取好時間，接下來試試看怎麼樣可以輸入參數來控制指針角度吧！從秒針開始做會比較好思考，因為會根據現在的秒數直接指在指定的秒數，不像是時針、分針會根據秒數與分鐘數多轉一點點。\n1. 秒針以下是我在腦內的思考流程XD\n\n假設現在是 0 秒的話，很明顯就是轉 0 度，如果是 10 秒的話要轉幾度呢?轉一圈是 360 度、 60 秒，因此一秒會轉 360/60 = 6 度。所以 10 秒 就是 10 * 6(每秒轉動6度) = 60 度\nP.S. 這邊預設角度 0 度時指針是指向 12 點。\n\n\n\n2. 分針先看看程式碼吧！\n\n\n\n一樣是每分鐘會轉 6 度，但是！在一分鐘內，分針會慢慢地轉到下一個 6 度。\n所以要計算現在分鐘數所轉的角度加上每秒會增加的角度。\n每秒會增加的角度 -&gt;每 60 秒秒針會轉 6 度，每 10 秒轉 1 度。\n因此最後算式是 ( 現在分鐘數 ) * 6 + ( 現在秒數 ) / 10，就是現在的角度啦！\n\n3. 時針其實這邊的就跟分針一樣的作法，只不過可以多一個判斷如果超過 12 點可以扣掉 12 ( 但後來想想其實沒有也沒差 )。\n\n\n4. 最後的最後接下來要使用的是如何讓 JS 一直去抓取現在的時間並且控制指針的角度，就要用到下面的語法。\nsetInterval() MDN傳送門固定延遲了某段時間之後，才去執行對應的程式碼，然後「不斷循環」。\nP.S. 完整語法是window.setInterval\n把程式全部整合起來吧~\n\n\n搭啦 ~ 完成Github page 請放大一點看，文字才不會跑版 QQ\n\n  See the Pen \n  時鐘-Clock - JS 地下城 by kevinshu (@kevinshu)\n  on CodePen.\n\n\n\ntags: JS Web SASS CSS","dateCreated":"2020-03-04T19:56:49+08:00","dateModified":"2021-03-12T00:20:17+08:00","datePublished":"2020-03-04T19:56:49+08:00","description":"這次的目標是時鐘，這次的挑戰其實比較麻煩的是刻 CSS (XD，JS的部分反而一下就完成了，相信大家應該也覺得這關不會太難。","headline":"CSS、JS切個時鐘吧 | JS地下城 - 002","image":["cover.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/"},"publisher":{"@type":"Organization","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg","logo":{"@type":"ImageObject","url":"avatar.jpg"}},"url":"https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/","keywords":"HTML, CSS, JavaScript, JS地下城","thumbnailUrl":"cover.png"}</script>
     <meta name="description" content="這次的目標是時鐘，這次的挑戰其實比較麻煩的是刻 CSS (XD，JS的部分反而一下就完成了，相信大家應該也覺得這關不會太難。">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="CSS、JS切個時鐘吧 | JS地下城 - 002">
-<meta property="og:url" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/index.html">
+<meta property="og:url" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/">
 <meta property="og:site_name" content="前端路上">
 <meta property="og:description" content="這次的目標是時鐘，這次的挑戰其實比較麻煩的是刻 CSS (XD，JS的部分反而一下就完成了，相信大家應該也覺得這關不會太難。">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/cover.png">
-<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/process-1.png">
-<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/process-2.png">
-<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/process-3.png">
+<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/cover.png">
+<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/process-1.png">
+<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/process-2.png">
+<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/process-3.png">
 <meta property="article:published_time" content="2020-03-04T11:56:49.000Z">
 <meta property="article:modified_time" content="2021-03-11T16:20:17.614Z">
 <meta property="article:author" content="Kevin Hsu">
@@ -42,7 +42,8 @@
 <meta property="article:tag" content="CSS">
 <meta property="article:tag" content="六角學院">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/cover.png">
+<meta name="twitter:image" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/cover.png">
+<meta name="twitter:creator" content="@kevinHWS">
     
     
         
@@ -51,8 +52,8 @@
         <meta property="og:image" content="https://kevinshu1995.github.io/blog/assets/images/avatar.jpg">
     
     
-        <meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/cover.png">
-        <meta class="swiftype" name="image" data-type="enum" content="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/cover.png">
+        <meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/cover.png">
+        <meta class="swiftype" name="image" data-type="enum" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/cover.png">
     
     
     
@@ -275,7 +276,7 @@
 <li><font color="#aaa">UI設計稿</font></li>
 </ul>
 </blockquote>
-<img src="/blog/JSDungeons/20200304/357102620/cover.png" class title="UI設計稿">
+<img src="/blog/JSDungeons/JS-Dungeon-002/cover.png" class title="UI設計稿">
 
 <a id="more"></a>
 
@@ -287,7 +288,7 @@
 <p>SCSS</p>
 <script src="https://gist.github.com/kevinshu1995/de26bfce5c11fa4b7214cd76f920fbd9.js?file=clock-01.scss"></script>
 
-<img src="/blog/JSDungeons/20200304/357102620/process-1.png" class title="Step 1">
+<img src="/blog/JSDungeons/JS-Dungeon-002/process-1.png" class title="Step 1">
 
 <h3 id="2-裝飾線、點"><a href="#2-裝飾線、點" class="headerlink" title="2. 裝飾線、點"></a>2. 裝飾線、點</h3><p>這邊程式碼有點長，說明一下我的作法。</p>
 <p>三十個元素，每一個元素都跟父元素同寬，設定裝飾線的高度，再用偽元素做兩邊的裝飾線、點，最後整個元素依照位置旋轉，每分鐘轉6度。</p>
@@ -296,7 +297,7 @@
 
 <p><em>順帶一提這邊我發現六角提供的設計稿是每小時中間有五個點，但是我想要讓每一格都是一秒或一分鐘，因此我把它修改成四個點。</em></p>
 <p>如下圖。</p>
-<img src="/blog/JSDungeons/20200304/357102620/process-2.png" class title="Step 2">
+<img src="/blog/JSDungeons/JS-Dungeon-002/process-2.png" class title="Step 2">
 
 <p>這邊完整的程式碼有點太長了，所以請移駕 <a href="https://codepen.io/kevinshu/pen/XWbjvOg" target="_blank" rel="external nofollow noopener noreferrer">codepen</a> 。</p>
 <h3 id="3-時鐘上的字"><a href="#3-時鐘上的字" class="headerlink" title="3. 時鐘上的字"></a>3. 時鐘上的字</h3><p>調整文字的旋轉作法其實跟裝飾線差不多，只不過父元素轉過去之後，字還要再<strong>旋轉</strong>回來，看起來才會是正的。</p>
@@ -307,7 +308,7 @@
 <h3 id="4-最後是指針"><a href="#4-最後是指針" class="headerlink" title="4. 最後是指針"></a>4. 最後是指針</h3><p>直接送上 <a href="https://codepen.io/kevinshu/pen/RwPojOg" target="_blank" rel="external nofollow noopener noreferrer">codepen</a> 程式碼。</p>
 <p>這邊的程式碼很長，直接過去看吧 XD ，需要注意的部分是這邊要測試一下<strong>旋轉時 12 點為 0 度</strong>，會比較好判斷，並且<strong>使旋轉的軸心在中間</strong>，這樣用 JS 控制時會比較輕鬆。</p>
 <p>完成 ! </p>
-<img src="/blog/JSDungeons/20200304/357102620/process-3.png" class title="Step 3">
+<img src="/blog/JSDungeons/JS-Dungeon-002/process-3.png" class title="Step 3">
 
 <p>等等，是不是忘了 JS 。</p>
 <h2 id="進入-JS-控制指針拉"><a href="#進入-JS-控制指針拉" class="headerlink" title="進入 JS 控制指針拉"></a>進入 JS 控制指針拉</h2><h2 id="抓取時間"><a href="#抓取時間" class="headerlink" title="抓取時間"></a>抓取時間</h2><p>這邊要使用的是 <code>new Date()</code>，直接在開發人員工具測試時會發現它會直接抓取現在的時間。<br>可以參考 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" rel="external nofollow noopener noreferrer">MDN</a> 的說明。</p>
@@ -371,7 +372,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/learningexp/20200530/4039908204/" data-tooltip="線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程" aria-label="上一篇: 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/learningexp/learning-hexLiveCourse/" data-tooltip="線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程" aria-label="上一篇: 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
@@ -380,7 +381,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/20200219/99449695/" data-tooltip="用 JavaScript 切出九九乘法表 | JS地下城 - 001" aria-label="下一篇: 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/JS-Dungeon-001/" data-tooltip="用 JavaScript 切出九九乘法表 | JS地下城 - 001" aria-label="下一篇: 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -398,7 +399,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-facebook" aria-hidden="true"></i>
                 </a>
             </li>
@@ -406,7 +407,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -414,7 +415,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
@@ -467,7 +468,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/learningexp/20200530/4039908204/" data-tooltip="線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程" aria-label="上一篇: 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/learningexp/learning-hexLiveCourse/" data-tooltip="線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程" aria-label="上一篇: 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
@@ -476,7 +477,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/20200219/99449695/" data-tooltip="用 JavaScript 切出九九乘法表 | JS地下城 - 001" aria-label="下一篇: 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/JS-Dungeon-001/" data-tooltip="用 JavaScript 切出九九乘法表 | JS地下城 - 001" aria-label="下一篇: 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -494,7 +495,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-facebook" aria-hidden="true"></i>
                 </a>
             </li>
@@ -502,7 +503,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -510,7 +511,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
@@ -544,7 +545,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
                     </a>
                 </li>
@@ -552,7 +553,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
                     </a>
                 </li>
@@ -560,7 +561,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>
                     </a>
                 </li>
@@ -630,13 +631,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/cover.jpg" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/cover.jpg" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
                             <h3 class="media-heading">《1917》最佳影片與導演獎熱門首選 | 電影雜談</h3>
                         </a>
                         <span class="media-meta">
@@ -655,13 +656,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/cover.png" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/cover.png" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
                             <h3 class="media-heading">用 JavaScript 切出九九乘法表 | JS地下城 - 001</h3>
                         </a>
                         <span class="media-meta">
@@ -680,13 +681,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/cover.png" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/cover.png" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
                             <h3 class="media-heading">CSS、JS切個時鐘吧 | JS地下城 - 002</h3>
                         </a>
                         <span class="media-meta">
@@ -705,13 +706,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/cover.png" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/cover.png" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
                             <h3 class="media-heading">線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程</h3>
                         </a>
                         <span class="media-meta">
@@ -730,13 +731,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/cover_epilogue.svg" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/cover_epilogue.svg" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
                             <h3 class="media-heading">俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001</h3>
                         </a>
                         <span class="media-meta">
@@ -775,9 +776,9 @@
     
         <script>
           var disqus_config = function() {
-            this.page.url = 'https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/';
+            this.page.url = 'https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/';
               
-            this.page.identifier = 'JSDungeons/20200304/357102620/';
+            this.page.identifier = 'JSDungeons/JS-Dungeon-002/';
               
           };
           (function() {

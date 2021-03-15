@@ -21,15 +21,15 @@
             <link rel="alternate" type="application/rss+xml" title="RSS" href="/blog/rss2.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg"},"articleBody":"\n\n\n\n\nBOSS 弱點 &gt; 【特定技術】僅能使用原生 JS 開始，不能使用套件\n\n【特定技術】特別注意必須用 JS 處理各國時區\n\n【書寫能力】請寫一篇 BLOG 來介紹你的挑戰過程，並介紹 JavaScript 如何提供 GMT、UTC 時區語法，以及何謂 TimeStamp。\n\nUI 設計稿\n\n\n\n\n\n\n\n\n\n絲路 思路一直以來都覺得 Date 是很複雜的東西，就懶得研究，實際研究之後的確有比較多的認識，不過我還是會盡量用套件處理時間的(握拳。\n接下來就直接說明撰寫時的思路吧。\n\n\n\n我的思考步驟\n採取的方式是，HTML 畫面上的地點文字是靜態的，其他的時間全部藉由 JS 動態帶入。\n抓取要帶入時間&amp;日期&amp;地區文字的元素之後，這時的他們是 nodelist，可以使用部分的陣列方法，此時全部取得的 nodelist 裡相同的 index 對應的都是相同的地區。\n由於 nodelist 的 index 是相對應的，就可以按照順序以抓取的地區透過 Date().toLocaleString() 的 timezone 選項逐一帶入 textContent 。\n最後一步是使用 window.setInterval() 每隔一秒取得一次時間(反正也只有顯示分鐘數，就不用太精確吧)\n\n備註:\n\ntimezone 被我單獨拉出來，因為這樣子方便維護(雖然我不會再打開這個檔案)\nwindow.onload 這一步非常重要 (當瀏覽器讀取完成，才去執行抓取時間的函式)\n\n\n\n\n程式碼12345678910111213141516171819202122232425262728293031323334353637383940414243444546function getTime()&#123;    let location = document.querySelectorAll('.location')    let dateText = document.querySelectorAll('.date')    let timeText = document.querySelectorAll('.time')    let timezone = &#123;        'NEW YORK': 'America/New_York',        'LONDON': 'Europe/London',        'BANGKOK': 'Asia/Bangkok',        'TAIWAN': 'Asia/Taipei',        'SYDNEY': 'Australia/Sydney',    &#125;    location.forEach( (item, index) =&gt; &#123;        timeText[index].textContent = currentTime(timezone[item.textContent]).time        dateText[index].textContent = \t\t\t`$&#123;currentTime(timezone[item.textContent]).date&#125; $&#123;currentTime(timezone[item.textContent]).year&#125;`    &#125;)&#125;function currentTime(timeZone)&#123;    let locale = 'en-US'    let options_YYYY = &#123;        timeZone,        year : 'numeric',    &#125;    let options_HHMM = &#123;        timeZone,        hour12 : false,        hour: 'numeric',        minute: '2-digit'    &#125;    let options_MMDD = &#123;        timeZone,        month : 'short',        day : 'numeric',    &#125;    return &#123;        year: new Date().toLocaleString(locale, options_YYYY),        date: new Date().toLocaleString(locale, options_MMDD),        time: new Date().toLocaleString(locale, options_HHMM),    &#125;&#125;window.onload = getTime()window.setInterval('getTime();', 1000)\n\n\n\nGMT、UTC原則上 GMT (Greenwich Mean Time) = UTC (International Atomic Time)，實際上不然。\n\nGMT 是根據一天的時間(或是說地球自轉一圈的時間)計算的，但因目前自轉速度是有減速的跡象，所以 GMT 的一秒會越來越久，而 UTC 是根據銫原子固定震盪次數的時間計算，UTC 基本上是更穩定的。 參考來源 : https://pansci.asia/archives/84978\n\n\n\n\nJavaScript 上的 UTC\n建立一個  JavaScript Date 物件來指向某一個時間點。Date 物件是基於世界標準時間（UTC） 1970 年 1 月 1 日開始的毫秒數值來儲存時間。參考來源 : https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date\n\n\n\n\nJavaScript Date 物件實體直接使用物件實體的方法來建立 Date 物件，不過字串解析時間時，充滿了各種坑，根據這邊的結論(直接看結論是怎樣?)，為了避免被各瀏覽器之間的支援度雷到，使用字串解析時間時要極度小心。\n\n如果你要我給建議，我可以說相容性最高的應該就是 Sat, 24 Sep 2016 20:42:16 GMT 這種日期時間格式，但請注意這種格式的缺點是【如果你沒有加上 GMT 時區，瀏覽器預設就會將這種格式解析為使用者電腦的本地時間】，如果沒注意到時區部分，對於全球性或跨國瀏覽的使用者來說可能會出現錯誤的時間差。否則請一律使用 ISO-8601 標準日期時間格式 ( 2016-09T02:34:33.346Z )，這種格式的優點就是【瀏覽器只會將這種格式解析為 GMT/UTC 標準時區的時間】，這樣反而可以強迫你用具有時區的思維來開發程式，出現時差錯誤的問題也會減少。\n\n直接過去參考一下吧!!! https://blog.miniasp.com/post/2016/09/25/JavaScript-Date-usage-in-details\n坑~\n\nDate物件複雜的地方不只是它的進位並非十進位而已，年月日的進位還涉及閏年、星期幾的問題，以及全球各種不同語言、全球時區使用的本地化格式的問題等等各種問題。\n\n\n\n\ntimestamp就是從1970年01月01日0分0秒起到現在的總毫秒數，注意，是毫秒數，通常取得之後會再乘以1000，反正也不需要這麼精確 ?就我所知 timestamp 會存起來做為判斷時間先後的依據，後取得的大於先取得的值，例如判斷。\n12new Date('1970-01-01').getTime(); // 0new Date('2020-01-01').getTime(); // 1577836800000\n\n\n\n\n時區實際使用時，時區是我最搞不懂的，因為 JS 會直接把取得的時間轉換為本地時間，所以不管怎麼處理最後得到的都會是瀏覽器的本地時間 QQ\nJS 的 Date().toLocaleString() 有提供 timezone 的 option，但是有一些支援度的問題 (caniuse)，IE 還有其他部分瀏覽器不支援。但我就是要用XD\n之前有看到一篇文章有寫到，目前有在規劃日期的相關統整之類的，看這邊，但是目前普遍都會建議日期的處理使用工具函示庫比較安全，不然會容易有 bug ，最出名的 Moment.js ，不過現在moment.js 也已經停止更新了(you probably don’t need moment js anymore)，\n總之先這樣吧XDD ，菜雞不要說太多，會越說越錯。\n\n參考https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/644589/https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Datehttps://blog.miniasp.com/post/2016/09/25/JavaScript-Date-usage-in-details\n\n最後附上連結，如下\n世界時鐘\nGithub Source code\nGithub Page\n\n\n\n\n個人連結\nGithub @kevinHWS\nJS 地下城網站首頁\n歡迎來看看其他的JS作品\n\n\n\n\n\n\n\n本文章若有任何資訊誤植或侵權，煩請告知，我會立刻處理。","dateCreated":"2021-03-09T22:21:49+08:00","dateModified":"2021-03-13T01:12:28+08:00","datePublished":"2021-03-09T22:21:49+08:00","description":"這一關使用的 Date 一直到現在還是覺得這是個有點麻煩的語法，但我還是想要擁抱處理時間的套件(奔","headline":"幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004","image":["jsDungeon_cover.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/"},"publisher":{"@type":"Organization","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg","logo":{"@type":"ImageObject","url":"avatar.jpg"}},"url":"https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/","keywords":"HTML, CSS, JavaScript, JS地下城","thumbnailUrl":"jsDungeon_cover.png"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg"},"articleBody":"\n\n\n\n\nBOSS 弱點 &gt; 【特定技術】僅能使用原生 JS 開始，不能使用套件\n\n【特定技術】特別注意必須用 JS 處理各國時區\n\n【書寫能力】請寫一篇 BLOG 來介紹你的挑戰過程，並介紹 JavaScript 如何提供 GMT、UTC 時區語法，以及何謂 TimeStamp。\n\nUI 設計稿\n\n\n\n\n\n\n\n\n\n絲路 思路一直以來都覺得 Date 是很複雜的東西，就懶得研究，實際研究之後的確有比較多的認識，不過我還是會盡量用套件處理時間的(握拳。\n接下來就直接說明撰寫時的思路吧。\n\n\n\n我的思考步驟\n採取的方式是，HTML 畫面上的地點文字是靜態的，其他的時間全部藉由 JS 動態帶入。\n抓取要帶入時間&amp;日期&amp;地區文字的元素之後，這時的他們是 nodelist，可以使用部分的陣列方法，此時全部取得的 nodelist 裡相同的 index 對應的都是相同的地區。\n由於 nodelist 的 index 是相對應的，就可以按照順序以抓取的地區透過 Date().toLocaleString() 的 timezone 選項逐一帶入 textContent 。\n最後一步是使用 window.setInterval() 每隔一秒取得一次時間(反正也只有顯示分鐘數，就不用太精確吧)\n\n備註:\n\ntimezone 被我單獨拉出來，因為這樣子方便維護(雖然我不會再打開這個檔案)\nwindow.onload 這一步非常重要 (當瀏覽器讀取完成，才去執行抓取時間的函式)\n\n\n\n\n程式碼12345678910111213141516171819202122232425262728293031323334353637383940414243444546function getTime()&#123;    let location = document.querySelectorAll('.location')    let dateText = document.querySelectorAll('.date')    let timeText = document.querySelectorAll('.time')    let timezone = &#123;        'NEW YORK': 'America/New_York',        'LONDON': 'Europe/London',        'BANGKOK': 'Asia/Bangkok',        'TAIWAN': 'Asia/Taipei',        'SYDNEY': 'Australia/Sydney',    &#125;    location.forEach( (item, index) =&gt; &#123;        timeText[index].textContent = currentTime(timezone[item.textContent]).time        dateText[index].textContent = \t\t\t`$&#123;currentTime(timezone[item.textContent]).date&#125; $&#123;currentTime(timezone[item.textContent]).year&#125;`    &#125;)&#125;function currentTime(timeZone)&#123;    let locale = 'en-US'    let options_YYYY = &#123;        timeZone,        year : 'numeric',    &#125;    let options_HHMM = &#123;        timeZone,        hour12 : false,        hour: 'numeric',        minute: '2-digit'    &#125;    let options_MMDD = &#123;        timeZone,        month : 'short',        day : 'numeric',    &#125;    return &#123;        year: new Date().toLocaleString(locale, options_YYYY),        date: new Date().toLocaleString(locale, options_MMDD),        time: new Date().toLocaleString(locale, options_HHMM),    &#125;&#125;window.onload = getTime()window.setInterval('getTime();', 1000)\n\n\n\nGMT、UTC原則上 GMT (Greenwich Mean Time) = UTC (International Atomic Time)，實際上不然。\n\nGMT 是根據一天的時間(或是說地球自轉一圈的時間)計算的，但因目前自轉速度是有減速的跡象，所以 GMT 的一秒會越來越久，而 UTC 是根據銫原子固定震盪次數的時間計算，UTC 基本上是更穩定的。 參考來源 : https://pansci.asia/archives/84978\n\n\n\n\nJavaScript 上的 UTC\n建立一個  JavaScript Date 物件來指向某一個時間點。Date 物件是基於世界標準時間（UTC） 1970 年 1 月 1 日開始的毫秒數值來儲存時間。參考來源 : https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date\n\n\n\n\nJavaScript Date 物件實體直接使用物件實體的方法來建立 Date 物件，不過字串解析時間時，充滿了各種坑，根據這邊的結論(直接看結論是怎樣?)，為了避免被各瀏覽器之間的支援度雷到，使用字串解析時間時要極度小心。\n\n如果你要我給建議，我可以說相容性最高的應該就是 Sat, 24 Sep 2016 20:42:16 GMT 這種日期時間格式，但請注意這種格式的缺點是【如果你沒有加上 GMT 時區，瀏覽器預設就會將這種格式解析為使用者電腦的本地時間】，如果沒注意到時區部分，對於全球性或跨國瀏覽的使用者來說可能會出現錯誤的時間差。否則請一律使用 ISO-8601 標準日期時間格式 ( 2016-09T02:34:33.346Z )，這種格式的優點就是【瀏覽器只會將這種格式解析為 GMT/UTC 標準時區的時間】，這樣反而可以強迫你用具有時區的思維來開發程式，出現時差錯誤的問題也會減少。\n\n直接過去參考一下吧!!! https://blog.miniasp.com/post/2016/09/25/JavaScript-Date-usage-in-details\n坑~\n\nDate物件複雜的地方不只是它的進位並非十進位而已，年月日的進位還涉及閏年、星期幾的問題，以及全球各種不同語言、全球時區使用的本地化格式的問題等等各種問題。\n\n\n\n\ntimestamp就是從1970年01月01日0分0秒起到現在的總毫秒數，注意，是毫秒數，通常取得之後會再乘以1000，反正也不需要這麼精確 ?就我所知 timestamp 會存起來做為判斷時間先後的依據，後取得的大於先取得的值，例如判斷。\n12new Date('1970-01-01').getTime(); // 0new Date('2020-01-01').getTime(); // 1577836800000\n\n\n\n\n時區實際使用時，時區是我最搞不懂的，因為 JS 會直接把取得的時間轉換為本地時間，所以不管怎麼處理最後得到的都會是瀏覽器的本地時間 QQ\nJS 的 Date().toLocaleString() 有提供 timezone 的 option，但是有一些支援度的問題 (caniuse)，IE 還有其他部分瀏覽器不支援。但我就是要用XD\n之前有看到一篇文章有寫到，目前有在規劃日期的相關統整之類的，看這邊，但是目前普遍都會建議日期的處理使用工具函示庫比較安全，不然會容易有 bug ，最出名的 Moment.js ，不過現在moment.js 也已經停止更新了(you probably don’t need moment js anymore)，\n總之先這樣吧XDD ，菜雞不要說太多，會越說越錯。\n\n參考https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/644589/https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Datehttps://blog.miniasp.com/post/2016/09/25/JavaScript-Date-usage-in-details\n\n最後附上連結，如下\n世界時鐘\nGithub Source code\nGithub Page\n\n\n\n\n個人連結\nGithub @kevinHWS\nJS 地下城網站首頁\n歡迎來看看其他的JS作品\n\n\n\n\n\n\n\n本文章若有任何資訊誤植或侵權，煩請告知，我會立刻處理。","dateCreated":"2021-03-09T22:21:49+08:00","dateModified":"2021-03-13T01:12:28+08:00","datePublished":"2021-03-09T22:21:49+08:00","description":"這一關使用的 Date 一直到現在還是覺得這是個有點麻煩的語法，但我還是想要擁抱處理時間的套件(奔","headline":"幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004","image":["jsDungeon_cover.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/"},"publisher":{"@type":"Organization","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg","logo":{"@type":"ImageObject","url":"avatar.jpg"}},"url":"https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/","keywords":"HTML, CSS, JavaScript, JS地下城","thumbnailUrl":"jsDungeon_cover.png"}</script>
     <meta name="description" content="這一關使用的 Date 一直到現在還是覺得這是個有點麻煩的語法，但我還是想要擁抱處理時間的套件(奔">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004">
-<meta property="og:url" content="https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/index.html">
+<meta property="og:url" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/">
 <meta property="og:site_name" content="前端路上">
 <meta property="og:description" content="這一關使用的 Date 一直到現在還是覺得這是個有點麻煩的語法，但我還是想要擁抱處理時間的套件(奔">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/jsDungeon_cover.png">
+<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/jsDungeon_cover.png">
 <meta property="article:published_time" content="2021-03-09T14:21:49.000Z">
 <meta property="article:modified_time" content="2021-03-12T17:12:28.418Z">
 <meta property="article:author" content="Kevin Hsu">
@@ -39,7 +39,8 @@
 <meta property="article:tag" content="CSS">
 <meta property="article:tag" content="六角">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/jsDungeon_cover.png">
+<meta name="twitter:image" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/jsDungeon_cover.png">
+<meta name="twitter:creator" content="@kevinHWS">
     
     
         
@@ -48,8 +49,8 @@
         <meta property="og:image" content="https://kevinshu1995.github.io/blog/assets/images/avatar.jpg">
     
     
-        <meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/jsDungeon_cover.png">
-        <meta class="swiftype" name="image" data-type="enum" content="https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/jsDungeon_cover.png">
+        <meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/jsDungeon_cover.png">
+        <meta class="swiftype" name="image" data-type="enum" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/jsDungeon_cover.png">
     
     
     
@@ -264,7 +265,7 @@
 <li><p><font color="#aaa">【書寫能力】請寫一篇 BLOG 來介紹你的挑戰過程，並介紹 JavaScript 如何提供 GMT、UTC 時區語法，以及何謂 TimeStamp。</font></p>
 </li>
 <li><p><font color="#aaa">UI 設計稿</font></p>
-<img src="/blog/JSDungeons/20210309/613471034/jsDungeon_cover.png" class title="UI設計稿" alt="UI設計稿">
+<img src="/blog/JSDungeons/JS-Dungeon-004/jsDungeon_cover.png" class title="UI設計稿" alt="UI設計稿">
 </li>
 </ul>
 </blockquote>
@@ -375,7 +376,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/casualtalk/20210313/290577396/" data-tooltip="Hi 👋 我是許文修 - 網頁設計師，目前致力於研究前端技術" aria-label="上一篇: Hi 👋 我是許文修 - 網頁設計師，目前致力於研究前端技術">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/casualtalk/about-me/" data-tooltip="Hi 👋 我是許文修 - 網頁設計師，目前致力於研究前端技術" aria-label="上一篇: Hi 👋 我是許文修 - 網頁設計師，目前致力於研究前端技術">
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
@@ -384,7 +385,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/20210222/2241008248/" data-tooltip="不負責任的 JavaScript 計算機 | JS地下城 - 003" aria-label="下一篇: 不負責任的 JavaScript 計算機 | JS地下城 - 003">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/JS-Dungeon-003/" data-tooltip="不負責任的 JavaScript 計算機 | JS地下城 - 003" aria-label="下一篇: 不負責任的 JavaScript 計算機 | JS地下城 - 003">
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -402,7 +403,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-facebook" aria-hidden="true"></i>
                 </a>
             </li>
@@ -410,7 +411,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -418,7 +419,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
@@ -471,7 +472,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/casualtalk/20210313/290577396/" data-tooltip="Hi 👋 我是許文修 - 網頁設計師，目前致力於研究前端技術" aria-label="上一篇: Hi 👋 我是許文修 - 網頁設計師，目前致力於研究前端技術">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/casualtalk/about-me/" data-tooltip="Hi 👋 我是許文修 - 網頁設計師，目前致力於研究前端技術" aria-label="上一篇: Hi 👋 我是許文修 - 網頁設計師，目前致力於研究前端技術">
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
@@ -480,7 +481,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/20210222/2241008248/" data-tooltip="不負責任的 JavaScript 計算機 | JS地下城 - 003" aria-label="下一篇: 不負責任的 JavaScript 計算機 | JS地下城 - 003">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/JS-Dungeon-003/" data-tooltip="不負責任的 JavaScript 計算機 | JS地下城 - 003" aria-label="下一篇: 不負責任的 JavaScript 計算機 | JS地下城 - 003">
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -498,7 +499,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-facebook" aria-hidden="true"></i>
                 </a>
             </li>
@@ -506,7 +507,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -514,7 +515,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
@@ -548,7 +549,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
                     </a>
                 </li>
@@ -556,7 +557,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
                     </a>
                 </li>
@@ -564,7 +565,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>
                     </a>
                 </li>
@@ -634,13 +635,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/cover.jpg" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/cover.jpg" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
                             <h3 class="media-heading">《1917》最佳影片與導演獎熱門首選 | 電影雜談</h3>
                         </a>
                         <span class="media-meta">
@@ -659,13 +660,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/cover.png" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/cover.png" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
                             <h3 class="media-heading">用 JavaScript 切出九九乘法表 | JS地下城 - 001</h3>
                         </a>
                         <span class="media-meta">
@@ -684,13 +685,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/cover.png" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/cover.png" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
                             <h3 class="media-heading">CSS、JS切個時鐘吧 | JS地下城 - 002</h3>
                         </a>
                         <span class="media-meta">
@@ -709,13 +710,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/cover.png" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/cover.png" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
                             <h3 class="media-heading">線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程</h3>
                         </a>
                         <span class="media-meta">
@@ -734,13 +735,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/cover_epilogue.svg" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/cover_epilogue.svg" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
                             <h3 class="media-heading">俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001</h3>
                         </a>
                         <span class="media-meta">
@@ -779,9 +780,9 @@
     
         <script>
           var disqus_config = function() {
-            this.page.url = 'https://kevinshu1995.github.io/blog/JSDungeons/20210309/613471034/';
+            this.page.url = 'https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-004/';
               
-            this.page.identifier = 'JSDungeons/20210309/613471034/';
+            this.page.identifier = 'JSDungeons/JS-Dungeon-004/';
               
           };
           (function() {

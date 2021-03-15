@@ -21,15 +21,15 @@
             <link rel="alternate" type="application/rss+xml" title="RSS" href="/blog/rss2.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg"},"articleBody":"\n\n\n\nBOSS 弱點 &gt; 【特定技術】數字位數過多時，不能因此而破版，計算機功能皆須齊全\n\n【自我學習】請在此關卡中「自學一個你原本不太會的技巧」，投稿時分享你透過哪些資源學習，並寫範例程式碼講解該技巧，以及你如何應用在此關卡上。\n\nUI 設計稿\n\n\n\n\n\n\n\n\n\n前言 廢話其實早就寫好了，只是覺得寫的不好加上拖延症發作，不過終於還是寫了啦 XDD\n計算機我覺得不好寫，有好多邏輯判斷要寫 QQ，但是寫起來很有趣。這邊我算是參照 windows 內建計算機的邏輯寫的，目前看起來沒有太大問題，如果有的話再來解決吧~本來寫好了一個最初的版本之後，放了很久覺得在可讀性上面有很多進步的空間，於是就搞了 ES6 Class 的寫法重寫了一遍，雖然看起來不是最佳解，但我決定先這樣 XD。\n\n\n\n\n思路與流程思路主要分為兩個區塊，分別都是陣列。第一區，目前使用者正在加值的數字，二，暫存的數字與運算符號，也就是最上面公式的區域。\n流程零，監聽按鈕當使用者按下按鈕之後，根據按下的按鈕判斷要進行哪一個動作，使用事件代理會比較好，再來是 HTML 用 data 來讓 JS 可以透過 dataset 來取按鈕代表的值，這樣按鈕裡的文字不管替換成甚麼都不會影響到程式了。\n事件捕獲、事件冒泡 | MDN\n一，加值當使用者按數字的時候會將按下的數字依序放入代表加值區的陣列，其中包含邏輯的運算，例如小數點是否已經存在、目前陣列可以再加上數字零嗎。當使用者按下運算符號(加減乘除甚至等於)進入下一階段。\n\n加值區的陣列裡面每一個值只能是一個數字或是小數點。\n\n12let number = [1, 2, 3, 4, \".\", 5, 6];// 上面這樣實際上就是 1234.56\n\n\n實際寫法會像下面這樣 - 這邊只是示範監聽一個按鈕，實際上使用會用事件代理的方式監聽整個區塊 - function 的地方建議還是要拉出來寫喔~\n\nHTML\n1&lt;button data-key=\"1\" class=\"btn-one\"&gt;1&lt;/button&gt;\n\nJavaScript\n12345678// 監聽按鈕被點擊時，觸發存放數字到加值區的 functionlet numbers = [];const btn = document.querySelector(\".btn-one\");btn.addEventListener(\"click\", function (e) &#123;    const number = e.target.dataset.key;    numbers = [...numbers, number];    // ... 是 es6 的 Spread Syntax，或是要用 push 也行&#125;);\n\n\n\n二，置入公式\n\n當按下加減乘除時，將目前的加值區轉為數字與按下的運算符號分別取出放到同一個物件，再將此陣列存放到公式的陣列，再把加值區的陣列清空。陣列的範例如下。\n1234567891011let formula = [    &#123;        number: 123.45,        mark: \"division\",    &#125;,    &#123;        number: 0.123,        mark: \"equal\",    &#125;,];// 上面這樣實際轉換就是 123.45 ÷ 0.123 =\n\n\n\n三，循環\n\n上面兩個動作不斷的循環，直到按下等於。循環的過程中，加值區會不斷的增加數字、重置，公式的陣列則會一直不斷的推入新的物件，也能藉此記錄步驟。\n四，輸出結果\n當使用者按下等於時，進到這個步驟之前，一樣會做先步驟二(置入公式)，再將公式的陣列完整取出進行運算，得出結果，清除公式陣列!\n\n\n以上就是整個思考邏輯與流程，其中有許多小細節要小心，必須要多加測試 (所以是有沒有要學寫測試)。另外，更新加值區數字與公式到畫面上，其實就是在按下按鈕來驅動函式的，我想不會有太大問題。\n\n\n\n\n\n收尾一下不細講我的程式了，反正這麼難看不看也罷 XD，前後兩個版本時間相差了半年左右，中間補了不少知識，應該是有進步不少(吧總之這個題目學到了\n\n物件導向的基礎運用\n一點點點點的 Function Programing\n\n\n\n\n\n最後附上連結，如下\n計算機\nGithub Source code\nGithub Page\n\n\n\n\n個人連結\nGithub @kevinHWS\nJS 地下城網站首頁\n歡迎來看看其他的JS作品\n\n\n\n\n\n\n\n本文章若有任何資訊誤植或侵權，煩請告知，我會立刻處理。","dateCreated":"2021-02-22T14:26:16+08:00","dateModified":"2021-03-12T00:18:34+08:00","datePublished":"2021-02-22T14:26:16+08:00","description":"拖延症發作之下好不容易寫成文章的一關，來來回回 JS 的部分也改了幾次，整個時程也有好幾個月。","headline":"不負責任的 JavaScript 計算機 | JS地下城 - 003","image":["jsDungeon_cover.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/"},"publisher":{"@type":"Organization","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg","logo":{"@type":"ImageObject","url":"avatar.jpg"}},"url":"https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/","keywords":"HTML, CSS, JavaScript, JS地下城","thumbnailUrl":"jsDungeon_cover.png"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg"},"articleBody":"\n\n\n\nBOSS 弱點 &gt; 【特定技術】數字位數過多時，不能因此而破版，計算機功能皆須齊全\n\n【自我學習】請在此關卡中「自學一個你原本不太會的技巧」，投稿時分享你透過哪些資源學習，並寫範例程式碼講解該技巧，以及你如何應用在此關卡上。\n\nUI 設計稿\n\n\n\n\n\n\n\n\n\n前言 廢話其實早就寫好了，只是覺得寫的不好加上拖延症發作，不過終於還是寫了啦 XDD\n計算機我覺得不好寫，有好多邏輯判斷要寫 QQ，但是寫起來很有趣。這邊我算是參照 windows 內建計算機的邏輯寫的，目前看起來沒有太大問題，如果有的話再來解決吧~本來寫好了一個最初的版本之後，放了很久覺得在可讀性上面有很多進步的空間，於是就搞了 ES6 Class 的寫法重寫了一遍，雖然看起來不是最佳解，但我決定先這樣 XD。\n\n\n\n\n思路與流程思路主要分為兩個區塊，分別都是陣列。第一區，目前使用者正在加值的數字，二，暫存的數字與運算符號，也就是最上面公式的區域。\n流程零，監聽按鈕當使用者按下按鈕之後，根據按下的按鈕判斷要進行哪一個動作，使用事件代理會比較好，再來是 HTML 用 data 來讓 JS 可以透過 dataset 來取按鈕代表的值，這樣按鈕裡的文字不管替換成甚麼都不會影響到程式了。\n事件捕獲、事件冒泡 | MDN\n一，加值當使用者按數字的時候會將按下的數字依序放入代表加值區的陣列，其中包含邏輯的運算，例如小數點是否已經存在、目前陣列可以再加上數字零嗎。當使用者按下運算符號(加減乘除甚至等於)進入下一階段。\n\n加值區的陣列裡面每一個值只能是一個數字或是小數點。\n\n12let number = [1, 2, 3, 4, \".\", 5, 6];// 上面這樣實際上就是 1234.56\n\n\n實際寫法會像下面這樣 - 這邊只是示範監聽一個按鈕，實際上使用會用事件代理的方式監聽整個區塊 - function 的地方建議還是要拉出來寫喔~\n\nHTML\n1&lt;button data-key=\"1\" class=\"btn-one\"&gt;1&lt;/button&gt;\n\nJavaScript\n12345678// 監聽按鈕被點擊時，觸發存放數字到加值區的 functionlet numbers = [];const btn = document.querySelector(\".btn-one\");btn.addEventListener(\"click\", function (e) &#123;    const number = e.target.dataset.key;    numbers = [...numbers, number];    // ... 是 es6 的 Spread Syntax，或是要用 push 也行&#125;);\n\n\n\n二，置入公式\n\n當按下加減乘除時，將目前的加值區轉為數字與按下的運算符號分別取出放到同一個物件，再將此陣列存放到公式的陣列，再把加值區的陣列清空。陣列的範例如下。\n1234567891011let formula = [    &#123;        number: 123.45,        mark: \"division\",    &#125;,    &#123;        number: 0.123,        mark: \"equal\",    &#125;,];// 上面這樣實際轉換就是 123.45 ÷ 0.123 =\n\n\n\n三，循環\n\n上面兩個動作不斷的循環，直到按下等於。循環的過程中，加值區會不斷的增加數字、重置，公式的陣列則會一直不斷的推入新的物件，也能藉此記錄步驟。\n四，輸出結果\n當使用者按下等於時，進到這個步驟之前，一樣會做先步驟二(置入公式)，再將公式的陣列完整取出進行運算，得出結果，清除公式陣列!\n\n\n以上就是整個思考邏輯與流程，其中有許多小細節要小心，必須要多加測試 (所以是有沒有要學寫測試)。另外，更新加值區數字與公式到畫面上，其實就是在按下按鈕來驅動函式的，我想不會有太大問題。\n\n\n\n\n\n收尾一下不細講我的程式了，反正這麼難看不看也罷 XD，前後兩個版本時間相差了半年左右，中間補了不少知識，應該是有進步不少(吧總之這個題目學到了\n\n物件導向的基礎運用\n一點點點點的 Function Programing\n\n\n\n\n\n最後附上連結，如下\n計算機\nGithub Source code\nGithub Page\n\n\n\n\n個人連結\nGithub @kevinHWS\nJS 地下城網站首頁\n歡迎來看看其他的JS作品\n\n\n\n\n\n\n\n本文章若有任何資訊誤植或侵權，煩請告知，我會立刻處理。","dateCreated":"2021-02-22T14:26:16+08:00","dateModified":"2021-03-12T00:18:34+08:00","datePublished":"2021-02-22T14:26:16+08:00","description":"拖延症發作之下好不容易寫成文章的一關，來來回回 JS 的部分也改了幾次，整個時程也有好幾個月。","headline":"不負責任的 JavaScript 計算機 | JS地下城 - 003","image":["jsDungeon_cover.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/"},"publisher":{"@type":"Organization","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg","logo":{"@type":"ImageObject","url":"avatar.jpg"}},"url":"https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/","keywords":"HTML, CSS, JavaScript, JS地下城","thumbnailUrl":"jsDungeon_cover.png"}</script>
     <meta name="description" content="拖延症發作之下好不容易寫成文章的一關，來來回回 JS 的部分也改了幾次，整個時程也有好幾個月。">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="不負責任的 JavaScript 計算機 | JS地下城 - 003">
-<meta property="og:url" content="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/index.html">
+<meta property="og:url" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/">
 <meta property="og:site_name" content="前端路上">
 <meta property="og:description" content="拖延症發作之下好不容易寫成文章的一關，來來回回 JS 的部分也改了幾次，整個時程也有好幾個月。">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/jsDungeon_cover.png">
+<meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/jsDungeon_cover.png">
 <meta property="article:published_time" content="2021-02-22T06:26:16.000Z">
 <meta property="article:modified_time" content="2021-03-11T16:18:34.325Z">
 <meta property="article:author" content="Kevin Hsu">
@@ -39,7 +39,8 @@
 <meta property="article:tag" content="CSS">
 <meta property="article:tag" content="六角學院">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/jsDungeon_cover.png">
+<meta name="twitter:image" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/jsDungeon_cover.png">
+<meta name="twitter:creator" content="@kevinHWS">
     
     
         
@@ -48,8 +49,8 @@
         <meta property="og:image" content="https://kevinshu1995.github.io/blog/assets/images/avatar.jpg">
     
     
-        <meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/jsDungeon_cover.png">
-        <meta class="swiftype" name="image" data-type="enum" content="https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/jsDungeon_cover.png">
+        <meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/jsDungeon_cover.png">
+        <meta class="swiftype" name="image" data-type="enum" content="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/jsDungeon_cover.png">
     
     
     
@@ -261,7 +262,7 @@
 <li><p><font color="#aaa">【自我學習】請在此關卡中「自學一個你原本不太會的技巧」，投稿時分享你透過哪些資源學習，並寫範例程式碼講解該技巧，以及你如何應用在此關卡上。</font></p>
 </li>
 <li><p><font color="#aaa">UI 設計稿</font></p>
-<img src="/blog/JSDungeons/20210222/2241008248/jsDungeon_cover.png" class title="UI設計稿" alt="UI設計稿">
+<img src="/blog/JSDungeons/JS-Dungeon-003/jsDungeon_cover.png" class title="UI設計稿" alt="UI設計稿">
 </li>
 </ul>
 </blockquote>
@@ -366,7 +367,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/20210309/613471034/" data-tooltip="幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004" aria-label="上一篇: 幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/JS-Dungeon-004/" data-tooltip="幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004" aria-label="上一篇: 幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004">
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
@@ -375,7 +376,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/codingnotes/20201208/907355643/" data-tooltip="gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001" aria-label="下一篇: gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/codingnotes/gulp-gh-pages-deploy-failed-QQ-codingnotes-001/" data-tooltip="gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001" aria-label="下一篇: gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001">
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -393,7 +394,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-facebook" aria-hidden="true"></i>
                 </a>
             </li>
@@ -401,7 +402,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -409,7 +410,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
@@ -462,7 +463,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/20210309/613471034/" data-tooltip="幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004" aria-label="上一篇: 幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/JSDungeons/JS-Dungeon-004/" data-tooltip="幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004" aria-label="上一篇: 幹嘛不自己上網查就好的 JavaScript 世界時鐘 | JS地下城 - 004">
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
@@ -471,7 +472,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/codingnotes/20201208/907355643/" data-tooltip="gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001" aria-label="下一篇: gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/codingnotes/gulp-gh-pages-deploy-failed-QQ-codingnotes-001/" data-tooltip="gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001" aria-label="下一篇: gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001">
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -489,7 +490,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-facebook" aria-hidden="true"></i>
                 </a>
             </li>
@@ -497,7 +498,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -505,7 +506,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
@@ -539,7 +540,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
                     </a>
                 </li>
@@ -547,7 +548,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
                     </a>
                 </li>
@@ -555,7 +556,7 @@
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>
                     </a>
                 </li>
@@ -625,13 +626,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/cover.jpg" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/cover.jpg" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/20200219/3056929099/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
                             <h3 class="media-heading">《1917》最佳影片與導演獎熱門首選 | 電影雜談</h3>
                         </a>
                         <span class="media-meta">
@@ -650,13 +651,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/cover.png" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/cover.png" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200219/99449695/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
                             <h3 class="media-heading">用 JavaScript 切出九九乘法表 | JS地下城 - 001</h3>
                         </a>
                         <span class="media-meta">
@@ -675,13 +676,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/cover.png" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/cover.png" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20200304/357102620/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
                             <h3 class="media-heading">CSS、JS切個時鐘吧 | JS地下城 - 002</h3>
                         </a>
                         <span class="media-meta">
@@ -700,13 +701,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/cover.png" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/cover.png" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/20200530/4039908204/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
                             <h3 class="media-heading">線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程</h3>
                         </a>
                         <span class="media-meta">
@@ -725,13 +726,13 @@
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
-                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/cover_epilogue.svg" width="90" height="90">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/cover_epilogue.svg" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/20201119/3608252835/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
                             <h3 class="media-heading">俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001</h3>
                         </a>
                         <span class="media-meta">
@@ -770,9 +771,9 @@
     
         <script>
           var disqus_config = function() {
-            this.page.url = 'https://kevinshu1995.github.io/blog/JSDungeons/20210222/2241008248/';
+            this.page.url = 'https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-003/';
               
-            this.page.identifier = 'JSDungeons/20210222/2241008248/';
+            this.page.identifier = 'JSDungeons/JS-Dungeon-003/';
               
           };
           (function() {
