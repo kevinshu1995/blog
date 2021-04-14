@@ -1,5 +1,5 @@
 ---
-title: 消滅 Teachable 的 Sidebar 的時候到了 | Tampermonkey Userscript
+title: Teachable 的 Sidebar 你的時辰到了 | Tampermonkey Userscript
 categories: 程式筆記
 tags:
   - Tampermonkey
@@ -17,7 +17,10 @@ date: 2021-04-14 22:39:41
 
 <!-- excerpt -->
 
-近日又回到 Teachable 上面繼續上之前買的課程，這個平台的版面上的 Sidebar 真的很惱人，因為我習慣把瀏覽器縮小，此時的 Sidebar 跟影片就同時卡在同一個頁面上
+近日又回到 Teachable 上面繼續上之前買的課程，這個平台上的 Sidebar 真的很惱人，因為我習慣把瀏覽器縮小來邊看code邊抄啊! 
+
+但是每次只要縮小瀏覽器大小，此時的 Sidebar 跟影片就同時並排...影片變超級小，平台上也沒有提供按鈕可以收合，我只是想要在一個螢幕多工作業啊!
+
 
 ![Teachable 原畫面展示](https://cf.jare.io/?u=https://kevinshu1995.github.io/blog/codingnotes/Tampermonkey-SideBarToggleButtonOnTeachable/teachableDemo.jpg)
 
@@ -26,11 +29,18 @@ date: 2021-04-14 22:39:41
 ![喔!氣氣氣氣氣!](https://media.giphy.com/media/LrXRnC08IEzZ8LfE7w/giphy.gif)
 
 
+可以參考一下 [Twitch](https://www.twitch.tv/) 的畫面，他提供了把側邊的畫面收合的按鈕，讓使用者也可以自行選擇，這個才是我想要的體驗，畢竟影片才是主體，旁邊的東西都給我閃邊去。
+
+![Twitch 畫面展示](https://cf.jare.io/?u=https://kevinshu1995.github.io/blog/codingnotes/Tampermonkey-SideBarToggleButtonOnTeachable/twitchDemo.jpg)
+
 ## Tampermonkey
 
 剛好這幾天看到 [保哥](https://www.facebook.com/will.fans) 的粉專貼出了關於 Tampermonkey 的 [貼文](https://www.facebook.com/will.fans/posts/4492143630814746)，用來協助翻譯 Microsoft Doc 的小工具，於是我查了一下發現，好像可以拿來使用在 Teachable 上面。
 
-腳本是用 Javascript 下去寫的，其實應該是可以理解成把腳本丟到到開發人員工具的 console 裡面執行，
+Tampermonkey Userscript，是要用 Javascript 下去寫的，其實應該是可以理解成把腳本丟到開發人員工具的 console 裡面執行，有在寫前端的朋友應該都沒有問題。
+官方的文件也有提供一些額外的 API，可以拿來做有趣的事，但我沒研讀，可以直接過去看 XD。
+
+[文件傳送門 Tampermonkey documentation](https://www.tampermonkey.net/)
 
 不過這東西出很久了，我太菜了今天才知道，哈哈。
 
@@ -48,6 +58,9 @@ date: 2021-04-14 22:39:41
 
 2. 點 [腳本連結](https://github.com/kevinshu1995/SideBarToggleButtonOnTeachable/raw/main/SideBarToggleButtonOnTeachable.user.js) 來安裝腳本
 
+3. 直接享受沒有 Sidebar 干擾的課程吧~
+
+_PS. 我發現有個寬度畫面會跑版，有空再來調吧~_
 
 ### 調整腳本啟用的網站
 
