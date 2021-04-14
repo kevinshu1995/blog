@@ -48,9 +48,9 @@ Tampermonkey Userscript，是要用 Javascript 下去寫的，其實應該是可
 
 ![Teachable 新增按紐展示](https://cf.jare.io/?u=https://kevinshu1995.github.io/blog/codingnotes/Tampermonkey-SideBarToggleButtonOnTeachable/teachableDemo_2.jpg)
 
-只要安裝好套件，打開課程影片之後，Tampermonkey 會開始跑腳本，腳本會在右上角新增一個按鈕，只要按下按鈕或是按下快捷鍵 `Ctrl-shift-Z` 就可以把 Sidebar 隱藏起來，在按一次按鈕或快捷鍵就可以復原，是不是超棒的 XDD
+安裝好套件並打開設定的 domain 下的課程影片後，Tampermonkey 會開始跑腳本，這個腳本會在 Teachable 右上角的 Navigation 最右側新增一個按鈕，只要按下按鈕或是快捷鍵 `Ctrl-shift-Z` 就可以把 Sidebar 隱藏起來，再按一次按鈕或快捷鍵就可以復原，是不是超棒的 XDD
 
-*對了我完全沒有在管相容性甚麼的，在我的chrome上面看起來沒問題，那就是沒問題XDD*
+*對了，我完全沒有在管相容性甚麼的，反正在我的chrome上面看起來沒問題，那就是沒問題XDD*
 
 ## 直接使用在 Teachable 吧!
 
