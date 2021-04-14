@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://kevinshu1995.github.io/blog/casualtalk/about-me/</loc>
+    
+    <lastmod>2021-04-14</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://kevinshu1995.github.io/blog/codingnotes/Tampermonkey-SideBarToggleButtonOnTeachable/</loc>
     
     <lastmod>2021-04-14</lastmod>
@@ -10,13 +17,6 @@
   
   <url>
     <loc>https://kevinshu1995.github.io/blog/learningexp/look-IAmSuck/</loc>
-    
-    <lastmod>2021-03-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://kevinshu1995.github.io/blog/casualtalk/about-me/</loc>
     
     <lastmod>2021-03-30</lastmod>
     
@@ -107,14 +107,14 @@
   </url>
   
   <url>
-    <loc>https://kevinshu1995.github.io/blog/categories/</loc>
+    <loc>https://kevinshu1995.github.io/blog/archives/</loc>
     
     <lastmod>2020-11-19</lastmod>
     
   </url>
   
   <url>
-    <loc>https://kevinshu1995.github.io/blog/archives/</loc>
+    <loc>https://kevinshu1995.github.io/blog/categories/</loc>
     
     <lastmod>2020-11-19</lastmod>
     
@@ -135,6 +135,20 @@
     <priority>1.0</priority>
   </url>
 
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/tags/Movie/</loc>
+    <lastmod>2021-04-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/tags/Life/</loc>
+    <lastmod>2021-04-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
   
   <url>
     <loc>https://kevinshu1995.github.io/blog/tags/HTML/</loc>
@@ -165,14 +179,14 @@
   </url>
   
   <url>
-    <loc>https://kevinshu1995.github.io/blog/tags/Movie/</loc>
+    <loc>https://kevinshu1995.github.io/blog/tags/%E7%A8%8B%E5%BC%8F%E7%AD%86%E8%A8%98/</loc>
     <lastmod>2021-04-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://kevinshu1995.github.io/blog/tags/Life/</loc>
+    <loc>https://kevinshu1995.github.io/blog/tags/gulp/</loc>
     <lastmod>2021-04-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -187,20 +201,6 @@
   
   <url>
     <loc>https://kevinshu1995.github.io/blog/tags/%E5%89%8D%E7%AB%AF%E5%AD%B8%E7%BF%92/</loc>
-    <lastmod>2021-04-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://kevinshu1995.github.io/blog/tags/%E7%A8%8B%E5%BC%8F%E7%AD%86%E8%A8%98/</loc>
-    <lastmod>2021-04-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://kevinshu1995.github.io/blog/tags/gulp/</loc>
     <lastmod>2021-04-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -223,13 +223,6 @@
 
   
   <url>
-    <loc>https://kevinshu1995.github.io/blog/categories/JSDungeons/</loc>
-    <lastmod>2021-04-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://kevinshu1995.github.io/blog/categories/casualtalk/</loc>
     <lastmod>2021-04-14</lastmod>
     <changefreq>daily</changefreq>
@@ -237,7 +230,7 @@
   </url>
   
   <url>
-    <loc>https://kevinshu1995.github.io/blog/categories/learningexp/</loc>
+    <loc>https://kevinshu1995.github.io/blog/categories/JSDungeons/</loc>
     <lastmod>2021-04-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -245,6 +238,13 @@
   
   <url>
     <loc>https://kevinshu1995.github.io/blog/categories/codingnotes/</loc>
+    <lastmod>2021-04-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kevinshu1995.github.io/blog/categories/learningexp/</loc>
     <lastmod>2021-04-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
