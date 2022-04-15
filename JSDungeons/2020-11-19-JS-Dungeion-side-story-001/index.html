@@ -1,0 +1,843 @@
+
+<!DOCTYPE html>
+<html lang="zh-tw">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="前端路上">
+    <title>俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001 - 前端路上</title>
+    <meta name="author" content="Kevin Hsu">
+    
+        <meta name="keywords" content="HTML,CSS,JavaScript,Web,Kevin,Hsu,Blog,F2E,Web-Design,許文修,前端,網頁,修,JS地下城,JavaScript">
+    
+    
+        <link rel="icon" href="https://kevinshu1995.github.io/blog/assets/images/favicon.ico">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/blog/atom.xml">
+        
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="/blog/rss2.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg"},"articleBody":"\n\n題目如下。\nChallenge實作俄羅斯方塊的計分系統背景俄羅斯方塊是一款益智遊戲，最初是由蘇聯俄羅斯軟件工程師 Alexey Pajitnov 設計的。\n關於計分制度計分公式是基於  當玩家一次清除越多條線，所獲得的分數就會越多  的想法下去設計的。例如，消去一行得 40 分，消去四行得 1200 分。\n且還搭配了一個分數會隨等級倍增的規則。遊戲會從等級 0 開始。當玩家每清除 10 行，等級就會上升。值得注意的是，等級上升之後，消除的總行數是不會重置的。\n\n\n\n\n關於這個題目，您可以參考此表：\n\n\n\nLevel\n消去 1 行\n消去 2 行\n消去 3 行\n消去 4 行\n\n\n\n0\n40\n100\n300\n1200\n\n\n1\n80\n200\n600\n2400\n\n\n2\n120\n300\n900\n3600\n\n\n3\n160\n400\n1200\n4800\n\n\n…\n\n\n\n\n\n\n7\n320\n800\n2400\n9600\n\n\n…\n\n\n\n\n\n\n你必須透過這張表格得出的公式來以此類推到 level N\n任務用 Nintendo 的原始計分系統來計算俄羅斯方塊的分數\ntype Line = 0 | 1 | 2 | 3 | 4; type getScore = (list: Line[]) =&gt; number;\nInput範例：[4, 2, 2, 3, 3, 4, 2]隨機長度的 array 且裡面只包含數字  0  到  4\nOutput計算的最終分數。\nExample\n1getScore([4, 2, 2, 3, 3, 4, 2]); &#x2F;&#x2F; returns 4900\n\n\n\n消去 4 行 +1200 (當前等級0)。分數：0 + 1200 = 1200\n消去 2 行 +100。分數：1200 + 100 = 1300\n消去 2 行 +100。分數：1300 + 100 = 1400\n消去 3 行 +300（當前等級仍為0）。分數：1400 + 300 = 1700消除的總行數  11=(4 + 2 + 2 + 3)，因此等級上升到1(每消除10行上升一次)\n消去 3 行 +600 (當前等級  1)。分數：1700 + 600 = 2300\n消去 4 行 +2400。分數：2300 + 2400 = 4700\n消去 2 行 +200。分數：4700 + 200 = 4900\n\nAnswer\n1234function getScore(list) &#123;    return score&#125;\n\n\n\n\n\n\n看完題目的時候想說感覺蠻簡單的，實作上感覺有些邏輯有點不熟悉，還是花了點時間想了一下。\n\n## 馬上開始\n\n\n觀察分數如何得到觀察一下行數&amp;等級的表格，第 0 級消除 1~4 行後得到的分數是基礎值，接下來依照級數，每一級的分數會是 ( 消除 x 行的基礎分數 _  (級數+1)_ 2)所以這邊得到幾個小結論\n\n消除第 0 級的 1~4 行分數 =&gt; [40, 100, 300, 1200]\n計算分數的公式會是   ( 消除 x 行的基礎分數 _  (級數+1)_ 2)\n\n\n再來先假設只有傳入一個數字吧，會比較好思考。\n12345678910111213// 只消掉一行let lines = 1;function getScore(lines) &#123;  //消除行數  let line = 0;  //基礎分數  let basic = [40, 100, 300, 1200];  //級數  let level = 0;  // 公式  return basic[lines - 1] * (level + 1) * 2;&#125;console.log(getScore(lines));\n\n應該不難。\n\n傳入多個參數要怎麼進行?從結果來看，因為要計算總合，這邊就直接聯想到 reduce()，還有一些需要特別注意的細節。\n\n消除分數會隨著等級提升而提高，但是以新數值傳入前的等級計算\n每一輪等級計算是以還沒加上傳入行數的等級為基礎\n\n1234567891011121314function getScore(list) &#123;  let score_basic = [40, 100, 300, 1200];  let level_times = 2;  let level = 0;  let line = 0;  return list.reduce((acc, value) =&gt; &#123;    //以累積的行數(line)計算目前等級    level = Math.floor(line / 10);    //計算等級後，讓累績行數加上新增的消除行數 (為下一圈做準備)    line += value;    return acc + score_basic[value - 1] * (level + 1);  &#125;, 0);&#125;getScore([4, 2, 2, 3, 3, 4, 2]); // 4900\n\n小小檢討一下後來看了一下其他前輩的算法之後發現，在計算等級的地方，我想得有點複雜level = Math.floor(line/10)這一段其實可以改成level = (line- line%10)/10就不需要用到 Math 了。\n\n\n\n\n\n\n\n後記後來看到丟出這段題目的前輩的解法，沒看過 Functional Programming，直接被嚇到 XDD，程式碼如下：\n123456789101112// J3小 XDDexport function getScore(arr: number[]) &#123;  return arr.reduce(    (&#123; scores, totalLines &#125;, lines) =&gt; (&#123;      scores:        scores +        [0, 40, 100, 300, 1200][lines] * (Math.floor(totalLines / 10) + 1),      totalLines: totalLines + lines,    &#125;),    &#123; scores: 0, totalLines: 0 &#125;  ).scores;&#125;\n\n慌張的我馬上去查了一下 FP 在幹嘛，學習清單又多一項可以學了 (擦汗..\nPS. 直接跳過傳入資料的驗證 XD\n\n\n本文章若有任何資訊誤植或侵權，煩請告知，我會立刻處理。","dateCreated":"2020-11-19T23:47:03+08:00","dateModified":"2022-04-15T17:29:25+08:00","datePublished":"2020-11-19T23:47:03+08:00","description":"今天在 Line 的社群上面，有位前輩釋出了公司內部的面試題，蠻有趣的就試做了一下，順便參考看看其他前輩都怎麼寫的，收穫良多 R~","headline":"俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001","image":["cover_epilogue.svg"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/"},"publisher":{"@type":"Organization","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg","logo":{"@type":"ImageObject","url":"avatar.jpg"}},"url":"https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/","keywords":"JavaScript, JS地下城","thumbnailUrl":"cover_epilogue.svg"}</script>
+    <meta name="description" content="今天在 Line 的社群上面，有位前輩釋出了公司內部的面試題，蠻有趣的就試做了一下，順便參考看看其他前輩都怎麼寫的，收穫良多 R~">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+<meta property="og:url" content="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/">
+<meta property="og:site_name" content="前端路上">
+<meta property="og:description" content="今天在 Line 的社群上面，有位前輩釋出了公司內部的面試題，蠻有趣的就試做了一下，順便參考看看其他前輩都怎麼寫的，收穫良多 R~">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2020-11-19T15:47:03.000Z">
+<meta property="article:modified_time" content="2022-04-15T09:29:25.832Z">
+<meta property="article:author" content="Kevin Hsu">
+<meta property="article:tag" content="JS地下城">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@kevinHWS">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://kevinshu1995.github.io/blog/assets/images/avatar.jpg">
+    
+    
+        <meta property="og:image" content="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/cover_epilogue.svg">
+        <meta class="swiftype" name="image" data-type="enum" content="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/cover_epilogue.svg">
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/blog/assets/css/style-47j7dgkyresjc7sgrltc3wsa2kzbilnnwmzvqdna98vgkqcmf6wwyq8uofid.min.css">
+
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154890967-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-154890967-2');
+    </script>
+
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/blog/" aria-label>
+            前端路上
+        </a>
+    </div>
+    
+        
+            <a class="header-right-icon open-algolia-search" href="#search" aria-label="打開鏈接: /blog/#search">
+        
+        
+            <i class="fa fa-search fa-lg"></i>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/blog/#about" aria-label="閱讀有關作者的更多信息">
+                    <img class="sidebar-profile-picture" src="/blog/assets/images/avatar.jpg" alt="作者的圖片">
+                </a>
+                <h4 class="sidebar-profile-name">Kevin Hsu</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>嗨! 這裡主要寫網頁前端相關文章，偶爾寫一些音樂、影集、電影、遊戲類的文章，請多指教</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/" rel="noopener" title="首頁">
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">首頁</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/all-categories" rel="noopener" title="分類">
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">分類</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/all-tags" rel="noopener" title="標籤">
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">標籤</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/all-archives" rel="noopener" title="所有文章">
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">所有文章</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link open-algolia-search" href="#search" rel="noopener" title="搜尋">
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">搜尋</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://github.com/kevinshu1995" target="_blank" rel="external nofollow noopener noreferrer" title="GitHub">
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://kevinshu1995.github.io/" target="_blank" rel="noopener" title="個人網站">
+                        <i class="sidebar-button-icon fas fa-globe-americas" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">個人網站</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/" target="_blank" rel="external nofollow noopener noreferrer" title="LinkedIn">
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/kevinshu1995@gmail.com" rel="noopener" title="Email">
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Email</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/rss2.xml" rel="noopener" title="RSS">
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-11-19T23:47:03+08:00">
+	
+		    11月 19, 2020
+    	
+    </time>
+    
+        <span>分類 </span>
+        
+    <a class="category-link" href="/blog/categories/JSDungeons/">JS地下城</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+
+<h2 id="題目如下。"><a href="#題目如下。" class="headerlink" title="題目如下。"></a>題目如下。</h2><blockquote>
+<h2 id="Challenge"><a href="#Challenge" class="headerlink" title="Challenge"></a>Challenge</h2><h2 id="實作俄羅斯方塊的計分系統"><a href="#實作俄羅斯方塊的計分系統" class="headerlink" title="實作俄羅斯方塊的計分系統"></a>實作俄羅斯方塊的計分系統</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>俄羅斯方塊是一款益智遊戲，<br>最初是由蘇聯俄羅斯軟件工程師 Alexey Pajitnov 設計的。</p>
+<h3 id="關於計分制度"><a href="#關於計分制度" class="headerlink" title="關於計分制度"></a>關於計分制度</h3><p>計分公式是基於  <code>當玩家一次清除越多條線，所獲得的分數就會越多</code>  的想法下去設計的。<br>例如，<code>消去一行得 40 分</code>，<code>消去四行得 1200 分</code>。</p>
+<p>且還搭配了一個<code>分數會隨等級倍增</code>的規則。<br>遊戲會<code>從等級 0 開始</code>。<br>當<code>玩家每清除 10 行，等級就會上升</code>。<br>值得注意的是，等級上升之後，消除的總行數是不會重置的。</p>
+</blockquote>
+<a id="more"></a>
+
+<blockquote>
+<p>關於這個題目，您可以參考此表：</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>消去 1 行</th>
+<th>消去 2 行</th>
+<th>消去 3 行</th>
+<th>消去 4 行</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>40</td>
+<td>100</td>
+<td>300</td>
+<td>1200</td>
+</tr>
+<tr>
+<td>1</td>
+<td>80</td>
+<td>200</td>
+<td>600</td>
+<td>2400</td>
+</tr>
+<tr>
+<td>2</td>
+<td>120</td>
+<td>300</td>
+<td>900</td>
+<td>3600</td>
+</tr>
+<tr>
+<td>3</td>
+<td>160</td>
+<td>400</td>
+<td>1200</td>
+<td>4800</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>320</td>
+<td>800</td>
+<td>2400</td>
+<td>9600</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><em>你必須透過這張表格得出的公式來以此類推到 level N</em></p>
+<h3 id="任務"><a href="#任務" class="headerlink" title="任務"></a>任務</h3><p>用 Nintendo 的原始計分系統來計算俄羅斯方塊的分數</p>
+<p>type Line = 0 | 1 | 2 | 3 | 4; type getScore = (list: Line[]) =&gt; number;</p>
+<h3 id="Input"><a href="#Input" class="headerlink" title="Input"></a>Input</h3><p>範例：<code>[4, 2, 2, 3, 3, 4, 2]</code><br>隨機長度的 array 且裡面只包含數字  <code>0</code>  到  <code>4</code></p>
+<h3 id="Output"><a href="#Output" class="headerlink" title="Output"></a>Output</h3><p>計算的最終分數。</p>
+<h3 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h3></blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">getScore([4, 2, 2, 3, 3, 4, 2]); &#x2F;&#x2F; returns 4900</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ol>
+<li>消去 4 行 +1200 (當前等級<code>0</code>)。分數：<code>0 + 1200 = 1200</code></li>
+<li>消去 2 行 +100。分數：<code>1200 + 100 = 1300</code></li>
+<li>消去 2 行 +100。分數：<code>1300 + 100 = 1400</code></li>
+<li>消去 3 行 +300（當前等級仍為<code>0</code>）。分數：<code>1400 + 300 = 1700</code><br><em>消除的總行數  <code>11</code>=<code>(4 + 2 + 2 + 3)</code>，因此等級上升到<code>1</code>(每消除<code>10</code>行上升一次)</em></li>
+<li>消去 3 行 +600 (當前等級  <code>1</code>)。分數：<code>1700 + 600 = 2300</code></li>
+<li>消去 4 行 +2400。分數：<code>2300 + 2400 = 4700</code></li>
+<li>消去 2 行 +200。分數：<code>4700 + 200 = 4900</code></li>
+</ol>
+<h3 id="Answer"><a href="#Answer" class="headerlink" title="Answer"></a>Answer</h3></blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function getScore(list) &#123;</span><br><span class="line"></span><br><span class="line">    return score</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<hr>
+<br>
+
+<p>看完題目的時候想說感覺蠻簡單的，實作上感覺有些邏輯有點不熟悉，還是花了點時間想了一下。</p>
+<br>
+## 馬上開始
+
+<ol>
+<li><p>觀察分數如何得到<br>觀察一下行數&amp;等級的表格，第 0 級消除 1~4 行後得到的分數是基礎值，接下來依照級數，每一級的分數會是 ( 消除 x 行的基礎分數 _  (級數+1)_ 2)<br>所以這邊得到幾個小結論</p>
+<ol>
+<li>消除第 0 級的 1~4 行分數 =&gt; [40, 100, 300, 1200]</li>
+<li>計算分數的公式會是   ( 消除 x 行的基礎分數 _  (級數+1)_ 2)</li>
+</ol>
+</li>
+<li><p>再來先假設只有傳入一個數字吧，會比較好思考。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 只消掉一行</span></span><br><span class="line"><span class="keyword">let</span> lines = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getScore</span>(<span class="params">lines</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//消除行數</span></span><br><span class="line">  <span class="keyword">let</span> line = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">//基礎分數</span></span><br><span class="line">  <span class="keyword">let</span> basic = [<span class="number">40</span>, <span class="number">100</span>, <span class="number">300</span>, <span class="number">1200</span>];</span><br><span class="line">  <span class="comment">//級數</span></span><br><span class="line">  <span class="keyword">let</span> level = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// 公式</span></span><br><span class="line">  <span class="keyword">return</span> basic[lines - <span class="number">1</span>] * (level + <span class="number">1</span>) * <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(getScore(lines));</span><br></pre></td></tr></table></figure>
+
+<p>應該不難。</p>
+</li>
+<li><p>傳入多個參數要怎麼進行?<br>從結果來看，因為要計算總合，這邊就直接聯想到 <code>reduce()</code>，還有一些需要特別注意的細節。</p>
+<ol>
+<li>消除分數會隨著等級提升而提高，但是以新數值傳入前的等級計算</li>
+<li>每一輪等級計算是以還沒加上傳入行數的等級為基礎</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getScore</span>(<span class="params">list</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> score_basic = [<span class="number">40</span>, <span class="number">100</span>, <span class="number">300</span>, <span class="number">1200</span>];</span><br><span class="line">  <span class="keyword">let</span> level_times = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">let</span> level = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">let</span> line = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">return</span> list.reduce(<span class="function">(<span class="params">acc, value</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">//以累積的行數(line)計算目前等級</span></span><br><span class="line">    level = <span class="built_in">Math</span>.floor(line / <span class="number">10</span>);</span><br><span class="line">    <span class="comment">//計算等級後，讓累績行數加上新增的消除行數 (為下一圈做準備)</span></span><br><span class="line">    line += value;</span><br><span class="line">    <span class="keyword">return</span> acc + score_basic[value - <span class="number">1</span>] * (level + <span class="number">1</span>);</span><br><span class="line">  &#125;, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line">getScore([<span class="number">4</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">2</span>]); <span class="comment">// 4900</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>小小檢討一下<br>後來看了一下其他前輩的算法之後發現，在計算等級的地方，我想得有點複雜<br><code>level = Math.floor(line/10)</code><br>這一段其實可以改成<br><code>level = (line- line%10)/10</code><br>就不需要用到 Math 了。</p>
+</li>
+</ol>
+<br>
+
+<hr>
+<br>
+
+<h2 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h2><p>後來看到丟出這段題目的前輩的解法，沒看過 Functional Programming，直接被嚇到 XDD，程式碼如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// J3小 XDD</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">getScore</span>(<span class="params">arr: number[]</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> arr.reduce(</span><br><span class="line">    (&#123; scores, totalLines &#125;, lines) =&gt; (&#123;</span><br><span class="line">      scores:</span><br><span class="line">        scores +</span><br><span class="line">        [<span class="number">0</span>, <span class="number">40</span>, <span class="number">100</span>, <span class="number">300</span>, <span class="number">1200</span>][lines] * (<span class="built_in">Math</span>.floor(totalLines / <span class="number">10</span>) + <span class="number">1</span>),</span><br><span class="line">      totalLines: totalLines + lines,</span><br><span class="line">    &#125;),</span><br><span class="line">    &#123; <span class="attr">scores</span>: <span class="number">0</span>, <span class="attr">totalLines</span>: <span class="number">0</span> &#125;</span><br><span class="line">  ).scores;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>慌張的我馬上去查了一下 FP 在幹嘛，學習清單又多一項可以學了 (擦汗..</p>
+<p>PS. 直接跳過傳入資料的驗證 XD</p>
+<br>
+
+<p><em>本文章若有任何資訊誤植或侵權，煩請告知，我會立刻處理。</em></p>
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">標籤</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/blog/tags/JS%E5%9C%B0%E4%B8%8B%E5%9F%8E/" rel="tag">JS地下城</a> <a class="tag tag--primary tag--small t-link" href="/blog/tags/JavaScript/" rel="tag">JavaScript</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/codingnotes/gulp-gh-pages-deploy-failed-QQ-codingnotes-001/" data-tooltip="gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001" aria-label="上一篇: gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/learningexp/learning-hexLiveCourse/" data-tooltip="線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程" aria-label="下一篇: 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Kommentieren">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2022 Kevin Hsu. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/codingnotes/gulp-gh-pages-deploy-failed-QQ-codingnotes-001/" data-tooltip="gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001" aria-label="上一篇: gulp-gh-pages deploy 失敗QQ | 程式筆記 - 001">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/learningexp/learning-hexLiveCourse/" data-tooltip="線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程" aria-label="下一篇: 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Kommentieren">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/blog/assets/images/avatar.jpg" alt="作者的圖片">
+        
+            <h4 id="about-card-name">Kevin Hsu</h4>
+        
+            <div id="about-card-bio"><p>嗨! 這裡主要寫網頁前端相關文章，偶爾寫一些音樂、影集、電影、遊戲類的文章，請多指教</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>網頁設計 / 網頁前端</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                台灣 / 台北
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="external nofollow noopener noreferrer" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="/blog/assets/images/logo-algolia-nebula-blue-full.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search" class="form-control input--large search-input" placeholder="Search ">
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">沒有找到文章</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/cover.jpg" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
+                            <h3 class="media-heading">《1917》最佳影片與導演獎熱門首選 | 電影雜談</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年2月19日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p><strong>一鏡到底的戰爭片!?我還不看爆</strong>。本年度最愛的電影!!!</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/cover.png" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                            <h3 class="media-heading">用 JavaScript 切出九九乘法表 | JS地下城 - 001</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年2月19日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>第一篇技術文章就交給 JS 地下城了，六角學院出的 JS 地下城真讚，根據現成的設計稿與指定的技術來練習，之後就先以地下城作為主軸來寫文章吧。</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/cover.png" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
+                            <h3 class="media-heading">CSS、JS切個時鐘吧 | JS地下城 - 002</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年3月4日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>這次的目標是時鐘，這次的挑戰其實比較麻煩的是刻 CSS (XD，JS的部分反而一下就完成了，相信大家應該也覺得這關不會太難。</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/cover.png" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                            <h3 class="media-heading">線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年5月30日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>疫情下的多人線上群聚，酒精噴了就上。有點難跟上進度的社畜切版直播課程心路歷程 QQ</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/cover_epilogue.svg" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+                            <h3 class="media-heading">俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年11月19日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>今天在 Line 的社群上面，有位前輩釋出了公司內部的面試題，蠻有趣的就試做了一下，順便參考看看其他前輩都怎麼寫的，收穫良多 R~</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium" data-message-zero="沒有找到文章" data-message-one="找到 1 篇文章" data-message-other="找到 {n} 篇文章">
+                找到 12 篇文章
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/blog/assets/images/cover_white.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/blog/assets/js/script-azuxmjr6dvjrkjmxnakg9m3aebipjy57gmyqutmd5fo3y5dkkfbxxjsnhu9z.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+        <script>
+          var disqus_config = function() {
+            this.page.url = 'https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/';
+              
+            this.page.identifier = 'JSDungeons/2020-11-19-JS-Dungeion-side-story-001/';
+              
+          };
+          (function() {
+            var d = document, s = d.createElement('script');
+            var disqus_shortname = 'kevinshu1995';
+            s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+          })();
+        </script>
+    
+
+
+
+    
+<script src="/blog/assets/js/moment-with-locales.js"></script>
+
+    
+<script src="/blog/assets/js/algoliasearch.js"></script>
+
+    <script>
+      var algoliaClient = algoliasearch('S3W8EV8SD2', '65e3cc5eed5e3c90368750d25cb26ca2');
+      var algoliaIndex = algoliaClient.initIndex('prod_hexoBlog');
+    </script>
+
+
+    </body>
+</html>

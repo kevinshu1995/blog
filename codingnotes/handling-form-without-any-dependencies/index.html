@@ -1,0 +1,773 @@
+
+<!DOCTYPE html>
+<html lang="zh-tw">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="前端路上">
+    <title>聰明的處理前端表單 | FormData API | handling-form-without-any-dependencies - 前端路上</title>
+    <meta name="author" content="Kevin Hsu">
+    
+        <meta name="keywords" content="HTML,CSS,JavaScript,Web,Kevin,Hsu,Blog,F2E,Web-Design,許文修,前端,網頁,修,">
+    
+    
+        <link rel="icon" href="https://kevinshu1995.github.io/blog/assets/images/favicon.ico">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/blog/atom.xml">
+        
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="/blog/rss2.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg"},"articleBody":"\n\n其實很久之前就很想寫這篇來記錄一下，每次都會忘記怎麼使用 FormData，因為真的太喜歡了特此紀錄 XD\n處理表單在還沒有使用 FormData API 之前，特別不知道該怎麼處理表單，最一開始我都是從 DOM 元素上面取值，再自己組合成 API 需要的格式使用，現在有了前端框架處理起來輕鬆很多，不過在我學了 FormData 之後感覺寫起來程式碼更優雅 高級 (並不會)。\n先來個原生範例\n\n  See the Pen \n  Untitled by kevinshu (@kevinshu)\n  on CodePen.\n\n\n\n\n看起來沒什麼問題啊 XD\n\n的確，但是學一下新的東西不好嗎 XD\nFormData API\nFormData API 相容性還不錯，加上 IE 已死，所以就放膽地使用吧！\n\n直接把剛剛的範例改寫成\n\n  See the Pen \n  Untitled by kevinshu (@kevinshu)\n  on CodePen.\n\n\n\n是不是看起來好像很方便!?\n需要注意的事\n\n建立 FormData 的時候傳入要取值的 Form 的 DOM 元素進去。eg: new FormData(&lt;FormElement&gt;)\nForm 裡面要取值的每一個元素 (input, select, textarea…) 都必須要給 name，不然 FormData 無法取值。\n\n兩個重點，很簡單就可以來操作 FormData 了！\n好用的 APIFormData.entries()也就是剛剛範例裡面所使用的方法，他會回傳 iterator 物件，搭配 Object.fromEntries 使用就可以取得整個表單的 key/value 的物件，非常的方便好用。\n不過需要注意，如果表單內有 checkbox 的話，只會回傳一個值，必須搭配後面的 FormData.getAll() 使用\n1234&lt;form id=\"form\"&gt;    &lt;input type=\"text\" name=\"username\" /&gt;    &lt;input type=\"number\" name=\"age\" /&gt;&lt;/form&gt;\n\n123456const form = document.querySelector(\"#form\");const formData = new FormData(form);const data = Object.formEntries(formData.entries());console.log(data);\n\n\n也可以使用 for..of 來替代 Object.formEntries() 喔\n\n\n\nFormData.get()這個就是可以根據傳入的 String 來取得 Form 元素裡面同名的值\n123&lt;form id=\"form\"&gt;    &lt;input type=\"text\" name=\"username\" /&gt;&lt;/form&gt;\n\n123456const form = document.querySelector(\"#form\");const formData = new FormData(form);const data = formData.get(\"username\");console.log(data); // 回傳 name 為 account 元素當前的值\n\n\n\nFormData.getAll()前面有提到，FormData.getAll() 是用來取得全部同名稱的值的陣列\n12345678&lt;form id=\"form\"&gt;    &lt;input type=\"text\" name=\"username\" /&gt;    &lt;input type=\"number\" name=\"age\" /&gt;    &lt;input type=\"checkbox\" name=\"habits\" value=\"swimming\" /&gt;    &lt;input type=\"checkbox\" name=\"habits\" value=\"reading\" /&gt;    &lt;input type=\"checkbox\" name=\"habits\" value=\"sleeping\" /&gt;&lt;/form&gt;\n\n12345678910const form = document.querySelector(\"#form\");const formData = new FormData(form);const data = &#123;    ...Object.fromEntries(formData.entries())    habits: formData.getAll(\"habits\")&#125;;console.log(data); // 回傳整個表單的值\n\n結語短到不行的文章，就知道我有多不用心了吧 XD總而言之，學了這個 FormData API，就可以不管套件或框架，原生語法直接給他用下去就是爽啦。\n當然 FormData 還有其他方法可以使用，就交給大家自己去研究了，哈哈哈。\n參考\nHow to Convert HTML Form Field Values to a JSON Object\nFormData - MDN\n\n\n\n本文章若有任何資訊誤植或侵權，煩請告知，我會立刻處理。","dateCreated":"2022-04-15T18:35:20+08:00","dateModified":"2022-04-16T01:38:49+08:00","datePublished":"2022-04-15T18:35:20+08:00","description":"透過 FormData API 處理表單可以很輕鬆!","headline":"聰明的處理前端表單 | FormData API | handling-form-without-any-dependencies","image":["cover_codingNote.svg"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/"},"publisher":{"@type":"Organization","name":"Kevin Hsu","sameAs":["https://github.com/kevinshu1995","https://kevinshu1995.github.io/","https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/","kevinshu1995@gmail.com"],"image":"avatar.jpg","logo":{"@type":"ImageObject","url":"avatar.jpg"}},"url":"https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/","keywords":"程式筆記, javascript","thumbnailUrl":"cover_codingNote.svg"}</script>
+    <meta name="description" content="透過 FormData API 處理表單可以很輕鬆!">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="聰明的處理前端表單 | FormData API | handling-form-without-any-dependencies">
+<meta property="og:url" content="https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/">
+<meta property="og:site_name" content="前端路上">
+<meta property="og:description" content="透過 FormData API 處理表單可以很輕鬆!">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2022-04-15T10:35:20.000Z">
+<meta property="article:modified_time" content="2022-04-15T17:38:49.284Z">
+<meta property="article:author" content="Kevin Hsu">
+<meta property="article:tag" content="程式筆記">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@kevinHWS">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://kevinshu1995.github.io/blog/assets/images/avatar.jpg">
+    
+    
+        <meta property="og:image" content="https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/cover_codingNote.svg">
+        <meta class="swiftype" name="image" data-type="enum" content="https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/cover_codingNote.svg">
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/blog/assets/css/style-47j7dgkyresjc7sgrltc3wsa2kzbilnnwmzvqdna98vgkqcmf6wwyq8uofid.min.css">
+
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154890967-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-154890967-2');
+    </script>
+
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/blog/" aria-label>
+            前端路上
+        </a>
+    </div>
+    
+        
+            <a class="header-right-icon open-algolia-search" href="#search" aria-label="打開鏈接: /blog/#search">
+        
+        
+            <i class="fa fa-search fa-lg"></i>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/blog/#about" aria-label="閱讀有關作者的更多信息">
+                    <img class="sidebar-profile-picture" src="/blog/assets/images/avatar.jpg" alt="作者的圖片">
+                </a>
+                <h4 class="sidebar-profile-name">Kevin Hsu</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>嗨! 這裡主要寫網頁前端相關文章，偶爾寫一些音樂、影集、電影、遊戲類的文章，請多指教</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/" rel="noopener" title="首頁">
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">首頁</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/all-categories" rel="noopener" title="分類">
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">分類</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/all-tags" rel="noopener" title="標籤">
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">標籤</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/all-archives" rel="noopener" title="所有文章">
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">所有文章</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link open-algolia-search" href="#search" rel="noopener" title="搜尋">
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">搜尋</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://github.com/kevinshu1995" target="_blank" rel="external nofollow noopener noreferrer" title="GitHub">
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://kevinshu1995.github.io/" target="_blank" rel="noopener" title="個人網站">
+                        <i class="sidebar-button-icon fas fa-globe-americas" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">個人網站</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://www.linkedin.com/in/%E6%96%87%E4%BF%AE-%E8%A8%B1-7b472a18a/" target="_blank" rel="external nofollow noopener noreferrer" title="LinkedIn">
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/kevinshu1995@gmail.com" rel="noopener" title="Email">
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Email</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/blog/rss2.xml" rel="noopener" title="RSS">
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            聰明的處理前端表單 | FormData API | handling-form-without-any-dependencies
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-04-15T18:35:20+08:00">
+	
+		    4月 15, 2022
+    	
+    </time>
+    
+        <span>分類 </span>
+        
+    <a class="category-link" href="/blog/categories/codingnotes/">程式筆記</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+
+<p>其實很久之前就很想寫這篇來記錄一下，每次都會忘記怎麼使用 FormData，因為真的太喜歡了特此紀錄 XD</p>
+<h2 id="處理表單"><a href="#處理表單" class="headerlink" title="處理表單"></a>處理表單</h2><p>在還沒有使用 FormData API 之前，特別不知道該怎麼處理表單，最一開始我都是從 DOM 元素上面取值，再自己組合成 API 需要的格式使用，現在有了前端框架處理起來輕鬆很多，不過在我學了 FormData 之後感覺寫起來程式碼更優雅 <del>高級</del> (並不會)。</p>
+<p>先來個原生範例</p>
+<p class="codepen" data-height="300" data-theme-id="dark" data-default-tab="js,result" data-slug-hash="BaJGNgq" data-preview="true" data-editable="true" data-user="kevinshu" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
+  <span>See the Pen <a href="https://codepen.io/kevinshu/pen/BaJGNgq" target="_blank" rel="external nofollow noopener noreferrer">
+  Untitled</a> by kevinshu (<a href="https://codepen.io/kevinshu" target="_blank" rel="external nofollow noopener noreferrer">@kevinshu</a>)
+  on <a href="https://codepen.io" target="_blank" rel="external nofollow noopener noreferrer">CodePen</a>.</span>
+</p>
+<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+
+<blockquote>
+<p>看起來沒什麼問題啊 XD</p>
+</blockquote>
+<p>的確，但是學一下新的東西不好嗎 XD</p>
+<h2 id="FormData-API"><a href="#FormData-API" class="headerlink" title="FormData API"></a>FormData API</h2><blockquote>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FormData" target="_blank" rel="external nofollow noopener noreferrer">FormData API</a> 相容性還不錯，加上 IE 已死，所以就放膽地使用吧！</p>
+</blockquote>
+<p>直接把剛剛的範例改寫成</p>
+<p class="codepen" data-height="300" data-theme-id="dark" data-default-tab="js,result" data-slug-hash="MWrzaYw" data-preview="true" data-editable="true" data-user="kevinshu" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
+  <span>See the Pen <a href="https://codepen.io/kevinshu/pen/MWrzaYw" target="_blank" rel="external nofollow noopener noreferrer">
+  Untitled</a> by kevinshu (<a href="https://codepen.io/kevinshu" target="_blank" rel="external nofollow noopener noreferrer">@kevinshu</a>)
+  on <a href="https://codepen.io" target="_blank" rel="external nofollow noopener noreferrer">CodePen</a>.</span>
+</p>
+<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+
+<p>是不是看起來好像很方便!?</p>
+<p>需要注意的事</p>
+<ol>
+<li>建立 FormData 的時候傳入要取值的 Form 的 DOM 元素進去。eg: <code>new FormData(&lt;FormElement&gt;)</code></li>
+<li>Form 裡面要取值的每一個元素 (input, select, textarea…) 都必須要給 name，不然 FormData 無法取值。</li>
+</ol>
+<p>兩個重點，很簡單就可以來操作 FormData 了！</p>
+<h3 id="好用的-API"><a href="#好用的-API" class="headerlink" title="好用的 API"></a>好用的 API</h3><h4 id="FormData-entries"><a href="#FormData-entries" class="headerlink" title="FormData.entries()"></a><code>FormData.entries()</code></h4><p>也就是剛剛範例裡面所使用的方法，他會回傳 iterator 物件，搭配 <code>Object.fromEntries</code> 使用就可以取得整個表單的 key/value 的物件，非常的方便好用。</p>
+<p>不過需要注意，如果表單內有 checkbox 的話，只會回傳一個值，必須搭配後面的 <code>FormData.getAll()</code> 使用</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">"form"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"username"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"number"</span> <span class="attr">name</span>=<span class="string">"age"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> form = <span class="built_in">document</span>.querySelector(<span class="string">"#form"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> formData = <span class="keyword">new</span> FormData(form);</span><br><span class="line"><span class="keyword">const</span> data = <span class="built_in">Object</span>.formEntries(formData.entries());</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(data);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>也可以使用 <code>for..of</code> 來替代 <code>Object.formEntries()</code> 喔</p>
+</blockquote>
+<br>
+
+<h4 id="FormData-get"><a href="#FormData-get" class="headerlink" title="FormData.get()"></a><code>FormData.get()</code></h4><p>這個就是可以根據傳入的 String 來取得 Form 元素裡面同名的值</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">"form"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"username"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> form = <span class="built_in">document</span>.querySelector(<span class="string">"#form"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> formData = <span class="keyword">new</span> FormData(form);</span><br><span class="line"><span class="keyword">const</span> data = formData.get(<span class="string">"username"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(data); <span class="comment">// 回傳 name 為 account 元素當前的值</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="FormData-getAll"><a href="#FormData-getAll" class="headerlink" title="FormData.getAll()"></a><code>FormData.getAll()</code></h3><p>前面有提到，<code>FormData.getAll()</code> 是用來取得全部同名稱的值的陣列</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">"form"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"username"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"number"</span> <span class="attr">name</span>=<span class="string">"age"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"checkbox"</span> <span class="attr">name</span>=<span class="string">"habits"</span> <span class="attr">value</span>=<span class="string">"swimming"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"checkbox"</span> <span class="attr">name</span>=<span class="string">"habits"</span> <span class="attr">value</span>=<span class="string">"reading"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"checkbox"</span> <span class="attr">name</span>=<span class="string">"habits"</span> <span class="attr">value</span>=<span class="string">"sleeping"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> form = <span class="built_in">document</span>.querySelector(<span class="string">"#form"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> formData = <span class="keyword">new</span> FormData(form);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    ...Object.fromEntries(formData.entries())</span><br><span class="line">    habits: formData.getAll(<span class="string">"habits"</span>)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(data); <span class="comment">// 回傳整個表單的值</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="結語"><a href="#結語" class="headerlink" title="結語"></a>結語</h2><p>短到不行的文章，就知道我有多不用心了吧 XD<br>總而言之，學了這個 FormData API，就可以不管套件或框架，原生語法直接給他用下去就是爽啦。</p>
+<p>當然 FormData 還有其他方法可以使用，就交給大家自己去研究了，哈哈哈。</p>
+<h2 id="參考"><a href="#參考" class="headerlink" title="參考"></a>參考</h2><ul>
+<li><a href="https://www.learnwithjason.dev/blog/get-form-values-as-json" target="_blank" rel="external nofollow noopener noreferrer">How to Convert HTML Form Field Values to a JSON Object</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/FormData" target="_blank" rel="external nofollow noopener noreferrer">FormData - MDN</a></li>
+</ul>
+<br>
+
+<p><em>本文章若有任何資訊誤植或侵權，煩請告知，我會立刻處理。</em></p>
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">標籤</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/blog/tags/javascript/" rel="tag">javascript</a> <a class="tag tag--primary tag--small t-link" href="/blog/tags/%E7%A8%8B%E5%BC%8F%E7%AD%86%E8%A8%98/" rel="tag">程式筆記</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/casualtalk/about-me/" data-tooltip="Hi 👋 我是許文修 - 網頁設計師，目前致力於研究前端技術" aria-label="上一篇: Hi 👋 我是許文修 - 網頁設計師，目前致力於研究前端技術">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/codingnotes/Tampermonkey-SideBarToggleButtonOnTeachable/" data-tooltip="Teachable 的 Sidebar 你的時辰到了 | Tampermonkey Userscript" aria-label="下一篇: Teachable 的 Sidebar 你的時辰到了 | Tampermonkey Userscript">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Kommentieren">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2022 Kevin Hsu. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/casualtalk/about-me/" data-tooltip="Hi 👋 我是許文修 - 網頁設計師，目前致力於研究前端技術" aria-label="上一篇: Hi 👋 我是許文修 - 網頁設計師，目前致力於研究前端技術">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/blog/codingnotes/Tampermonkey-SideBarToggleButtonOnTeachable/" data-tooltip="Teachable 的 Sidebar 你的時辰到了 | Tampermonkey Userscript" aria-label="下一篇: Teachable 的 Sidebar 你的時辰到了 | Tampermonkey Userscript">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/" title="分享到 Facebook" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/" title="分享到 Twitter" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/" title="分享到 Google+" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Kommentieren">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/" aria-label="分享到 Facebook" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://twitter.com/intent/tweet?text=https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/" aria-label="分享到 Twitter" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="https://plus.google.com/share?url=https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/" aria-label="分享到 Google+" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/blog/assets/images/avatar.jpg" alt="作者的圖片">
+        
+            <h4 id="about-card-name">Kevin Hsu</h4>
+        
+            <div id="about-card-bio"><p>嗨! 這裡主要寫網頁前端相關文章，偶爾寫一些音樂、影集、電影、遊戲類的文章，請多指教</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>網頁設計 / 網頁前端</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                台灣 / 台北
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="external nofollow noopener noreferrer" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="/blog/assets/images/logo-algolia-nebula-blue-full.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search" class="form-control input--large search-input" placeholder="Search ">
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">沒有找到文章</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/cover.jpg" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/casualtalk/movies-1917/" aria-label=": 《1917》最佳影片與導演獎熱門首選 | 電影雜談">
+                            <h3 class="media-heading">《1917》最佳影片與導演獎熱門首選 | 電影雜談</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年2月19日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p><strong>一鏡到底的戰爭片!?我還不看爆</strong>。本年度最愛的電影!!!</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/cover.png" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-001/" aria-label=": 用 JavaScript 切出九九乘法表 | JS地下城 - 001">
+                            <h3 class="media-heading">用 JavaScript 切出九九乘法表 | JS地下城 - 001</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年2月19日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>第一篇技術文章就交給 JS 地下城了，六角學院出的 JS 地下城真讚，根據現成的設計稿與指定的技術來練習，之後就先以地下城作為主軸來寫文章吧。</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/cover.png" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/JS-Dungeon-002/" aria-label=": CSS、JS切個時鐘吧 | JS地下城 - 002">
+                            <h3 class="media-heading">CSS、JS切個時鐘吧 | JS地下城 - 002</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年3月4日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>這次的目標是時鐘，這次的挑戰其實比較麻煩的是刻 CSS (XD，JS的部分反而一下就完成了，相信大家應該也覺得這關不會太難。</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/cover.png" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/learningexp/learning-hexLiveCourse/" aria-label=": 線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程">
+                            <h3 class="media-heading">線下不能群聚? 那線上總可以吧! 200人六角線上前端切版直播課程</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年5月30日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>疫情下的多人線上群聚，酒精噴了就上。有點難跟上進度的社畜切版直播課程心路歷程 QQ</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+                            <img class="media-image" src="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/cover_epilogue.svg" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://kevinshu1995.github.io/blog/JSDungeons/2020-11-19-JS-Dungeion-side-story-001/" aria-label=": 俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001">
+                            <h3 class="media-heading">俄羅斯方塊謎題 | JS地下城 - 番外篇 - 001</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020年11月19日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>今天在 Line 的社群上面，有位前輩釋出了公司內部的面試題，蠻有趣的就試做了一下，順便參考看看其他前輩都怎麼寫的，收穫良多 R~</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium" data-message-zero="沒有找到文章" data-message-one="找到 1 篇文章" data-message-other="找到 {n} 篇文章">
+                找到 12 篇文章
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/blog/assets/images/cover_white.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/blog/assets/js/script-azuxmjr6dvjrkjmxnakg9m3aebipjy57gmyqutmd5fo3y5dkkfbxxjsnhu9z.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+        <script>
+          var disqus_config = function() {
+            this.page.url = 'https://kevinshu1995.github.io/blog/codingnotes/handling-form-without-any-dependencies/';
+              
+            this.page.identifier = 'codingnotes/handling-form-without-any-dependencies/';
+              
+          };
+          (function() {
+            var d = document, s = d.createElement('script');
+            var disqus_shortname = 'kevinshu1995';
+            s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+          })();
+        </script>
+    
+
+
+
+    
+<script src="/blog/assets/js/moment-with-locales.js"></script>
+
+    
+<script src="/blog/assets/js/algoliasearch.js"></script>
+
+    <script>
+      var algoliaClient = algoliasearch('S3W8EV8SD2', '65e3cc5eed5e3c90368750d25cb26ca2');
+      var algoliaIndex = algoliaClient.initIndex('prod_hexoBlog');
+    </script>
+
+
+    </body>
+</html>
